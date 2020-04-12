@@ -23,6 +23,7 @@ public class Poloniex {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(Poloniex.class);
     private final static String ROUTE = "https://poloniex.com/public?command=";
+    public static final int TIMEOUT = 15 * 1000;
 
     /**
      * getChartData(LocalDateTime.now().minusMonths(3), LocalDateTime.now(), currency, Periods.eighteenHundred.getNumVal());
@@ -44,14 +45,16 @@ public class Poloniex {
         List<ChartDataPojo> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
         });
 
-        setLocalDateTime(openOrdersSingleCurrencyPOJO);
+        setDateAndCurrency(openOrdersSingleCurrencyPOJO, currency);
         return openOrdersSingleCurrencyPOJO;
     }
 
-    private void setLocalDateTime(List<ChartDataPojo> openOrdersSingleCurrencyPOJO) {
-        openOrdersSingleCurrencyPOJO.forEach(entry -> entry
-                .setLocalDateTime(LocalDateTime
-                        .ofEpochSecond(entry.getDate(), 0, ZoneOffset.UTC)));
+    private void setDateAndCurrency(List<ChartDataPojo> openOrdersSingleCurrencyPOJO, String currency) {
+        openOrdersSingleCurrencyPOJO.forEach(entry -> {
+            entry.setLocalDateTime(LocalDateTime
+                    .ofEpochSecond(entry.getDate(), 0, ZoneOffset.UTC));
+            entry.setCurrency(currency);
+        });
     }
 
     public List<String> getAvailableCurrenciesAtExchange() throws IOException {
@@ -68,12 +71,12 @@ public class Poloniex {
         return currencies;
     }
 
-    public String sendRequest(final String queryArgs) throws IOException {
+    private String sendRequest(final String queryArgs) throws IOException {
         final URL obj = new URL(queryArgs);
         final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        con.setConnectTimeout(15 * 1000);
-        con.setReadTimeout(15 * 1000);
+        con.setConnectTimeout(TIMEOUT);
+        con.setReadTimeout(TIMEOUT);
         // optional default is GET
         con.setRequestMethod("GET");
 
