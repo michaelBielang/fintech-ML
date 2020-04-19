@@ -1,71 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {jsonToArray} from './helpers'
 
 
-
-class Main extends React.Component {
-
-    constructor() {
-        super();
-        this.state = {data: []};
+function calculateWinner(squares) {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            return squares[a];
+        }
     }
-
-    async getContent() {
-        const response = await fetch('/api/json');
-        const json = await response.json();
-        const array = jsonToArray(json);
-        this.setState({data: array});
-    }
-
-    /*    componentDidMount() {
-            fetch('/api/json')
-                .then(res => res.json())
-                .then(json => this.setState({ data: json }));
-        }*/
-
-    render() {
-        this.getContent();
-        return (
-            <div>
-                <ul>
-                    {this.state.data.map(el => (
-                        <li>
-                            {el.name}: {el.value}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
-
+    return null;
 }
 
-/*function Main2() {
-    const [message, setMessage] = useState("");
-
-    useEffect(() => {
-        fetch('/api/json')
-            .then(response => response.text())
-            .then(message => {
-                setMessage(message);
-            });
-    }, [])
-
-    return (
-        <div className="App">
-            <header className="App-header">
-                <h1 className="App-title">{message}</h1>
-            </header>
-            <p className="App-intro">
-                To get started, edit <code>src/App.js</code> and save to reload.
-            </p>
-        </div>
-    )
-
-}*/
-/*
 function Square(props) {
     return (
         <button className="square" onClick={() => props.onClick()}>
@@ -149,6 +106,24 @@ class Game extends React.Component {
         )
     }
 
+
+    /*  handleClick(i) {
+          const history = this.state.historyArray.slice(0, this.state.stepNumber + 1);
+          const current = history[history.length - 1];
+          const squares = current.squares.slice();
+          if (calculateWinner(squares) || squares[i]) {
+              return;
+          }
+          squares[i] = this.state.xIsNext ? 'X' : 'O';
+          this.setState({
+              historyArray: history.concat([{
+                  squares: squares
+              }]),
+              stepNumber: history.length,
+              xIsNext: !this.state.xIsNext,
+          });
+      }*/
+
     render() {
         const history = this.state.historyArray;
         const current = history[this.state.stepNumber];
@@ -190,12 +165,12 @@ class Game extends React.Component {
             </div>
         );
     }
-}*/
+}
 
 // ========================================
 
 ReactDOM.render(
-    <Main/>,
+    <Game/>,
     document.getElementById('root')
 );
 
