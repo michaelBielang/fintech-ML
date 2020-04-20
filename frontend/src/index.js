@@ -1,29 +1,54 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {jsonToArray} from './helpers'
-
+import {jsonToArray} from './helpers';
+import Button from './Button';
 
 
 class Main extends React.Component {
 
     constructor() {
         super();
-        this.state = {data: []};
+        this.state = {
+            data: [],
+            curTime: new Date().toLocaleString()
+        };
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.setState({
+                curTime: new Date().toLocaleString()
+            })
+        }, 1000)
+
+        /*        fetch('/api/json')
+                    .then(res => res.json())
+                    .then(json => this.setState({ data: json }));*/
     }
 
     async getContent() {
-        const response = await fetch('/api/json');
-        const json = await response.json();
-        const array = jsonToArray(json);
-        this.setState({data: array});
-    }
 
-    /*    componentDidMount() {
-            fetch('/api/json')
-                .then(res => res.json())
-                .then(json => this.setState({ data: json }));
-        }*/
+        const response = await fetch('/api/json')
+            .then((resp) => {
+                const json = resp.json() // there's always a body
+                if (resp.status >= 200 && resp.status < 300) {
+                    return json
+                } else {
+                    return "";
+                    //return json.then(err => {throw err;});
+                    // reject([{name: "noName", value: "noValue"}]) todo
+                }
+            }).catch(err => console.log("error1"))
+
+        const json = await response;
+
+        const array = jsonToArray(json);
+
+        this.setState({
+            data: array
+        });
+    }
 
     render() {
         this.getContent();
@@ -36,6 +61,12 @@ class Main extends React.Component {
                         </li>
                     ))}
                 </ul>
+                <div>
+                    text: {this.state.curTime}
+                </div>
+                <div>
+                    <RealTimeChart/>
+                </div>
             </div>
         );
     }
