@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 @Table(name = "CHART_DATA_VOS")
 public class ChartDataVO {
 
+    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private long date;
     private String high;
     private String low;
@@ -24,10 +29,6 @@ public class ChartDataVO {
     private String currency;
     @JsonIgnore
     private LocalDateTime localDateTime;
-    @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     private ChartDataVO(Builder builder) {
         setDate(builder.date);
