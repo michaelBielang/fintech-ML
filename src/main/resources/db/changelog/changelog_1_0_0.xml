@@ -23,10 +23,19 @@
             <column name="close" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="quoteVolume" type="varchar(255)">
+            <column name="volume" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="weightedAverage" type="varchar(255)">
+            <column name="quote_volume" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weighted_average" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="local_date_time" type="Date">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -19,7 +19,7 @@ public class Test {
     public void test() {
         try {
             final List<String> currencies = poloniex.getAvailableCurrenciesAtExchange();
-            final List<ChartDataVO> chartDataVOS = poloniex.getChartData(LocalDateTime.now().minusMonths(3), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred.getPeriodValue());
+            final List<ChartDataVO> chartDataVOS = poloniex.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred.getPeriodValue());
             storage.saveChartDate(chartDataVOS);
         } catch (IOException e) {
             e.printStackTrace();
