@@ -1,6 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataPojo;
+import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +34,7 @@ public class Poloniex {
      * @param period
      * @return
      */
-    public List<ChartDataPojo> getChartData(final LocalDateTime from, final LocalDateTime to, final String currency, final int period) throws IOException {
+    public List<ChartDataVO> getChartData(final LocalDateTime from, final LocalDateTime to, final String currency, final int period) throws IOException {
 
         final String command = "returnChartData&currencyPair=";
         final String start = "&start=" + from.atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -42,14 +42,14 @@ public class Poloniex {
         final String periodCommand = "&period=" + period;
         final String query = ROUTE + command + currency + start + end + periodCommand;
 
-        List<ChartDataPojo> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
+        List<ChartDataVO> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
         });
 
         setDateAndCurrency(openOrdersSingleCurrencyPOJO, currency);
         return openOrdersSingleCurrencyPOJO;
     }
 
-    private void setDateAndCurrency(List<ChartDataPojo> openOrdersSingleCurrencyPOJO, String currency) {
+    private void setDateAndCurrency(List<ChartDataVO> openOrdersSingleCurrencyPOJO, String currency) {
         openOrdersSingleCurrencyPOJO.forEach(entry -> {
             entry.setLocalDateTime(LocalDateTime
                     .ofEpochSecond(entry.getDate(), 0, ZoneOffset.UTC));

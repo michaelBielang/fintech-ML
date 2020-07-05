@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.exchangeAPI;
 
 import com.bachelorthesis.supervised_problem_solving.exchangeAPI.enums.Periods;
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataPojo;
+import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
 import com.bachelorthesis.supervised_problem_solving.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class Test {
     public void test() {
         try {
             final List<String> currencies = poloniex.getAvailableCurrenciesAtExchange();
-            final List<ChartDataPojo> chartDataPojos = poloniex.getChartData(LocalDateTime.now().minusMonths(3), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred.getNumVal());
-            storage.saveChartDate(chartDataPojos);
+            final List<ChartDataVO> chartDataVOS = poloniex.getChartData(LocalDateTime.now().minusMonths(3), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred.getPeriodValue());
+            storage.saveChartDate(chartDataVOS);
         } catch (IOException e) {
             e.printStackTrace();
         }

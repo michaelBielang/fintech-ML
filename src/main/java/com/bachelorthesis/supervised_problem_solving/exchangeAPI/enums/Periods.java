@@ -9,13 +9,13 @@ public enum Periods {
     hundredFortyFourHundred(14400),
     eightHundredSixtyFour(86400);
 
-    private int numVal;
+    private int periodValue;
 
-    Periods(int numVal) {
-        this.numVal = numVal;
+    Periods(int periodValue) {
+        this.periodValue = periodValue;
     }
 
-    public int getNumVal() {
-        return numVal;
+    public int getPeriodValue() {
+        return periodValue;
     }
 }

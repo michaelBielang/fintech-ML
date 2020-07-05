@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class ChartDataController {
 
 
-    @PostMapping(path = "/chartData/")
+    @PostMapping(path = "/chartData")
     public String entryPoint(@RequestParam @NotBlank String currency, @RequestParam @NotBlank int from,
                              @RequestParam @NotBlank int to,
                              @RequestParam @Min(300) @Max(86400) @NotBlank int timeFrame) {

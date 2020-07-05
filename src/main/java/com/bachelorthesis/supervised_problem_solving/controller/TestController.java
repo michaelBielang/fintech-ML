@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.controller;
 
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataPojo;
+import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +26,7 @@ public class TestController {
 
     @GetMapping("/api/json")
     public String json() throws JsonProcessingException {
-        final ChartDataPojo chartDataPojo = new ChartDataPojo.Builder()
+        final ChartDataVO chartDataVO = new ChartDataVO.Builder()
                 .close("2.0")
                 .date(2L)
                 .high("2.0")
@@ -36,15 +36,13 @@ public class TestController {
                 .volume("2.0")
                 .weightedAverage("2.0")
                 .build();
-        return objectMapper.writeValueAsString(chartDataPojo);
+        return objectMapper.writeValueAsString(chartDataVO);
     }
 
 
     @GetMapping(value = "/student/{studentId}")
     public @ResponseBody
     String getTestData(@PathVariable Integer studentId) {
-
-
         return "student";
     }
 

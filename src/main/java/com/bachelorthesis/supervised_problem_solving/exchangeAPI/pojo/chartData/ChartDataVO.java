@@ -3,15 +3,13 @@ package com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class ChartDataPojo {
+@Table(name = "CHART_DATA_VOS")
+public class ChartDataVO {
 
     private long date;
     private String high;
@@ -31,7 +29,7 @@ public class ChartDataPojo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private ChartDataPojo(Builder builder) {
+    private ChartDataVO(Builder builder) {
         setDate(builder.date);
         setHigh(builder.high);
         setLow(builder.low);
@@ -96,8 +94,8 @@ public class ChartDataPojo {
             return this;
         }
 
-        public ChartDataPojo build() {
-            return new ChartDataPojo(this);
+        public ChartDataVO build() {
+            return new ChartDataVO(this);
         }
     }
 }
