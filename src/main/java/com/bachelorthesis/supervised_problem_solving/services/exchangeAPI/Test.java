@@ -14,7 +14,9 @@ import java.util.List;
 public class Test {
 
     private Storage storage;
-    private PoloniexApiService poloniexApiService = new PoloniexApiService();
+
+    @Autowired
+    PoloniexApiService poloniexApiService;
 
     public void test() {
         try {
