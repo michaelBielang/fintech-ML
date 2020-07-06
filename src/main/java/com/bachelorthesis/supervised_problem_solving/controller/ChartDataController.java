@@ -1,7 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.controller;
 
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.PoloniexApiService;
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,22 +22,13 @@ public class ChartDataController {
     @Autowired
     private PoloniexApiService poloniexApiService;
 
-    @GetMapping(path = "/chartData")
+    @GetMapping(path = "/api/chartData")
     public List<ChartDataVO> requestDistinctChartData(@RequestParam @NotBlank final String currency,
                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDateTime from,
                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDateTime to,
                                                       @RequestParam(required = false) @Min(300) @Max(86400) final Integer timeFrame) throws IOException, InterruptedException {
-        return poloniexApiService.getChartData(from, to, currency, Periods.valueOf(String.valueOf(timeFrame)));
-    }
-
-    @GetMapping(path = "/chartData")
-    public List<ChartDataVO> requestCurrencyChartData(@RequestParam @NotBlank String currency) {
         return new LinkedList<>();
-    }
-
-    @GetMapping(path = "/chartData3")
-    public String getAllChartData() {
-        return "cool";
+        //return poloniexApiService.getChartData(from, to, currency, Periods.valueOf(String.valueOf(timeFrame)));
     }
 }
 
