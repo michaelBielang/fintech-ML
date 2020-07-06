@@ -1,5 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.exchangeAPI;
 
+import com.bachelorthesis.supervised_problem_solving.exchangeAPI.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,11 +20,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Poloniex {
+import static java.lang.Thread.sleep;
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(Poloniex.class);
+public class PoloniexApiService {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(PoloniexApiService.class);
     private final static String ROUTE = "https://poloniex.com/public?command=";
-    public static final int TIMEOUT = 15 * 1000;
+    private static final int TIMEOUT = 15 * 1000;
+    private static final int MININUM_POLL_WINDOW_IN_MS = 250;
+    private long lastApiCall;
 
     /**
      * getChartData(LocalDateTime.now().minusMonths(3), LocalDateTime.now(), currency, Periods.eighteenHundred.getNumVal());
@@ -34,12 +39,12 @@ public class Poloniex {
      * @param period
      * @return
      */
-    public List<ChartDataVO> getChartData(final LocalDateTime from, final LocalDateTime to, final String currency, final int period) throws IOException {
+    public List<ChartDataVO> getChartData(final LocalDateTime from, final LocalDateTime to, final String currency, final Periods period) throws IOException, InterruptedException {
 
         final String command = "returnChartData&currencyPair=";
         final String start = "&start=" + from.atZone(ZoneId.systemDefault()).toEpochSecond();
         final String end = "&end=" + to.atZone(ZoneId.systemDefault()).toEpochSecond();
-        final String periodCommand = "&period=" + period;
+        final String periodCommand = "&period=" + period.getPeriodValue();
         final String query = ROUTE + command + currency + start + end + periodCommand;
 
         List<ChartDataVO> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
@@ -57,7 +62,7 @@ public class Poloniex {
         });
     }
 
-    public List<String> getAvailableCurrenciesAtExchange() throws IOException {
+    public List<String> getAvailableCurrenciesAtExchange() throws IOException, InterruptedException {
         final String queryArgs = "https://poloniex.com/public?command=returnTicker";
         final String reply = sendRequest(queryArgs);
         final JsonNode jsonNode = new ObjectMapper().readTree(reply);
@@ -71,7 +76,12 @@ public class Poloniex {
         return currencies;
     }
 
-    private String sendRequest(final String queryArgs) throws IOException {
+    private String sendRequest(final String queryArgs) throws IOException, InterruptedException {
+        //prevent ip blocking from Poloniex
+        if (System.currentTimeMillis() - lastApiCall < MININUM_POLL_WINDOW_IN_MS) {
+            sleep(System.currentTimeMillis() - lastApiCall);
+        }
+
         final URL obj = new URL(queryArgs);
         final HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -86,6 +96,7 @@ public class Poloniex {
         final BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         final String result = in.readLine();
         con.disconnect();
+        lastApiCall = System.currentTimeMillis();
 
         return result;
     }

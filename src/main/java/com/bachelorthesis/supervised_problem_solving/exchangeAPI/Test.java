@@ -14,14 +14,14 @@ import java.util.List;
 public class Test {
 
     private Storage storage;
-    private Poloniex poloniex = new Poloniex();
+    private PoloniexApiService poloniexApiService = new PoloniexApiService();
 
     public void test() {
         try {
-            final List<String> currencies = poloniex.getAvailableCurrenciesAtExchange();
-            final List<ChartDataVO> chartDataVOS = poloniex.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred.getPeriodValue());
+            final List<String> currencies = poloniexApiService.getAvailableCurrenciesAtExchange();
+            final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred);
             storage.saveChartDate(chartDataVOS);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
