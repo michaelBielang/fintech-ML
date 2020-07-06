@@ -5,7 +5,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operation;
 import org.tensorflow.Tensor;
 
-public class tensorApi {
+public class TensorApi {
 
     private void setup() {
         Graph graph = new Graph();

@@ -65,7 +65,7 @@ public class PoloniexApiService {
         final String periodCommand = "&period=" + period.getPeriodValue();
         final String query = ROUTE + command + currency + start + end + periodCommand;
 
-        List<ChartDataVO> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
+        final List<ChartDataVO> openOrdersSingleCurrencyPOJO = new ObjectMapper().readValue(sendRequest(query), new TypeReference<>() {
         });
 
         setDateAndCurrency(openOrdersSingleCurrencyPOJO, currency);
