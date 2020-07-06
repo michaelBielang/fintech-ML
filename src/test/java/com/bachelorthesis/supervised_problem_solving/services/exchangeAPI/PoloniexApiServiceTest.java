@@ -1,7 +1,7 @@
-package com.bachelorthesis.supervised_problem_solving.exchangeAPI;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.enums.Periods;
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums.Periods;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +21,7 @@ class PoloniexApiServiceTest {
     @BeforeAll
     public static void setup() throws IOException, InterruptedException {
         PoloniexApiServiceTest.poloniexApiService = new PoloniexApiService();
+        poloniexApiService.init();
         PoloniexApiServiceTest.currencyList = poloniexApiService.getAvailableCurrenciesAtExchange();
         PoloniexApiServiceTest.chartDataVOList = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencyList.get(0), Periods.nineHundred);
     }

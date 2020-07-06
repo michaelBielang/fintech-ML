@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.exchangeAPI.enums;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums;
 
 public enum Periods {
 

@@ -1,6 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving;
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.Test;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

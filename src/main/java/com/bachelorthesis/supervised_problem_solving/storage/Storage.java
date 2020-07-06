@@ -1,6 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.storage;
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,13 +10,13 @@ import java.util.List;
 public class Storage {
 
     @Autowired
-    ChartRepository chartRepository;
+    PoloniexChartDataVOSRepository poloniexChartDataVOSRepository;
 
     public void saveChartDate(List<ChartDataVO> chartDataVOS) {
-        chartRepository.saveAll(chartDataVOS);
+        poloniexChartDataVOSRepository.saveAll(chartDataVOS);
     }
 
     public void getChartDataHistory(List<ChartDataVO> chartDataVOS) {
-        chartRepository.saveAll(chartDataVOS);
+        poloniexChartDataVOSRepository.saveAll(chartDataVOS);
     }
 }

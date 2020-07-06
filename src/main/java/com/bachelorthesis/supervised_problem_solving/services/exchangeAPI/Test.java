@@ -1,7 +1,7 @@
-package com.bachelorthesis.supervised_problem_solving.exchangeAPI;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.enums.Periods;
-import com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums.Periods;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
 import com.bachelorthesis.supervised_problem_solving.storage.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

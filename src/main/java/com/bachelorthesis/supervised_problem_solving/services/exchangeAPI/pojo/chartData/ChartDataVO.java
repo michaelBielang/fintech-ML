@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.exchangeAPI.pojo.chartData;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -42,94 +42,6 @@ public class ChartDataVO {
         setVolume(builder.volume);
         setQuoteVolume(builder.quoteVolume);
         setWeightedAverage(builder.weightedAverage);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
-    }
-
-    public String getHigh() {
-        return high;
-    }
-
-    public void setHigh(String high) {
-        this.high = high;
-    }
-
-    public String getLow() {
-        return low;
-    }
-
-    public void setLow(String low) {
-        this.low = low;
-    }
-
-    public String getOpen() {
-        return open;
-    }
-
-    public void setOpen(String open) {
-        this.open = open;
-    }
-
-    public String getClose() {
-        return close;
-    }
-
-    public void setClose(String close) {
-        this.close = close;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public void setVolume(String volume) {
-        this.volume = volume;
-    }
-
-    public String getQuoteVolume() {
-        return quoteVolume;
-    }
-
-    public void setQuoteVolume(String quoteVolume) {
-        this.quoteVolume = quoteVolume;
-    }
-
-    public String getWeightedAverage() {
-        return weightedAverage;
-    }
-
-    public void setWeightedAverage(String weightedAverage) {
-        this.weightedAverage = weightedAverage;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
     }
 
     public static final class Builder {
