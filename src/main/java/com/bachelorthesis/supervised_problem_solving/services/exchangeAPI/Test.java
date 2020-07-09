@@ -23,6 +23,7 @@ public class Test {
             final List<String> currencies = poloniexApiService.getAvailableCurrenciesAtExchange();
             final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencies.get(0), Periods.eighteenHundred);
             storage.saveChartDate(chartDataVOS);
+            System.out.println("SAVED");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

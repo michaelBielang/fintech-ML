@@ -13,7 +13,7 @@ public class Storage {
     PoloniexChartDataVOSRepository poloniexChartDataVOSRepository;
 
     public void saveChartDate(List<ChartDataVO> chartDataVOS) {
-        poloniexChartDataVOSRepository.saveAll(chartDataVOS);
+        System.out.println(poloniexChartDataVOSRepository.saveAll(chartDataVOS));
     }
 
     public void getChartDataHistory(List<ChartDataVO> chartDataVOS) {
