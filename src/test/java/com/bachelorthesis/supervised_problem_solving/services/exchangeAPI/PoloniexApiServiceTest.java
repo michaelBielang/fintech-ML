@@ -1,7 +1,8 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums.Periods;
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PoloniexApiServiceTest {
+public class PoloniexApiServiceTest {
 
     private static PoloniexApiService poloniexApiService;
     private static List<ChartDataVO> chartDataVOList;
@@ -23,7 +24,7 @@ class PoloniexApiServiceTest {
         PoloniexApiServiceTest.poloniexApiService = new PoloniexApiService();
         poloniexApiService.init();
         PoloniexApiServiceTest.currencyList = poloniexApiService.getAvailableCurrenciesAtExchange();
-        PoloniexApiServiceTest.chartDataVOList = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencyList.get(0), Periods.nineHundred);
+        PoloniexApiServiceTest.chartDataVOList = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), currencyList.get(0), Periods.fifteenMinutes);
     }
 
     @Test

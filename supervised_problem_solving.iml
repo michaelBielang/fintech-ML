@@ -135,5 +135,12 @@
     <orderEntry type="library" name="Maven: org.tensorflow:tensorflow:1.15.0" level="project" />
     <orderEntry type="library" name="Maven: org.tensorflow:libtensorflow:1.15.0" level="project" />
     <orderEntry type="library" name="Maven: org.tensorflow:libtensorflow_jni:1.15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.ta4j:ta4j-core:0.13" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-junit4:2.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-module-junit4-common:2.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-reflect:2.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-core:2.0.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:2.1" level="project" />
   </component>
 </module>

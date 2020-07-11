@@ -1,7 +1,7 @@
-package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex;
 
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.enums.Periods;
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

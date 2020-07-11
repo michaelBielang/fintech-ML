@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.controller;
 
 
-import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData.ChartDataVO;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +27,14 @@ public class TestController {
     @GetMapping("/api/json")
     public String json() throws JsonProcessingException {
         final ChartDataVO chartDataVO = new ChartDataVO.Builder()
-                .close("2.0")
+                .close(2.0)
                 .date(2L)
-                .high("2.0")
-                .low("1.0")
-                .open("0.0")
-                .quoteVolume("2.0")
-                .volume("2.0")
-                .weightedAverage("2.0")
+                .high(2.0)
+                .low(2.0)
+                .open(2.0)
+                .quoteVolume(2.0)
+                .volume(2.0)
+                .weightedAverage(2.0)
                 .build();
         return objectMapper.writeValueAsString(chartDataVO);
     }

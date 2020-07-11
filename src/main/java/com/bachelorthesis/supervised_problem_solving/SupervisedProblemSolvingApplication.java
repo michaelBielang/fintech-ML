@@ -12,6 +12,6 @@ public class SupervisedProblemSolvingApplication {
         // SpringApplication.run(SupervisedProblemSolvingApplication.class, args);
         ConfigurableApplicationContext applicationContext = SpringApplication.run(SupervisedProblemSolvingApplication.class, args);
         Test test = applicationContext.getBean(Test.class);
-        test.test();
+        test.testRsi();
     }
 }

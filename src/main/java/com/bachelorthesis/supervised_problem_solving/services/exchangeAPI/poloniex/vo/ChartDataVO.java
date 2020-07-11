@@ -1,5 +1,6 @@
-package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.pojo.chartData;
+package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo;
 
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -17,13 +18,14 @@ public class ChartDataVO {
     private Long id;
 
     private long date;
-    private String high;
-    private String low;
-    private String open;
-    private String close;
-    private String volume;
-    private String quoteVolume;
-    private String weightedAverage;
+    private double high;
+    private double low;
+    private double open;
+    private double close;
+    private double volume;
+    private double quoteVolume;
+    private double weightedAverage;
+    private Periods periods;
 
     @JsonIgnore
     private String currency;
@@ -46,13 +48,13 @@ public class ChartDataVO {
 
     public static final class Builder {
         private long date;
-        private String high;
-        private String low;
-        private String open;
-        private String close;
-        private String volume;
-        private String quoteVolume;
-        private String weightedAverage;
+        private double high;
+        private double low;
+        private double open;
+        private double close;
+        private double volume;
+        private double quoteVolume;
+        private double weightedAverage;
 
         public Builder() {
         }
@@ -62,37 +64,37 @@ public class ChartDataVO {
             return this;
         }
 
-        public Builder high(String val) {
+        public Builder high(double val) {
             high = val;
             return this;
         }
 
-        public Builder low(String val) {
+        public Builder low(double val) {
             low = val;
             return this;
         }
 
-        public Builder open(String val) {
+        public Builder open(double val) {
             open = val;
             return this;
         }
 
-        public Builder close(String val) {
+        public Builder close(double val) {
             close = val;
             return this;
         }
 
-        public Builder volume(String val) {
+        public Builder volume(double val) {
             volume = val;
             return this;
         }
 
-        public Builder quoteVolume(String val) {
+        public Builder quoteVolume(double val) {
             quoteVolume = val;
             return this;
         }
 
-        public Builder weightedAverage(String val) {
+        public Builder weightedAverage(double val) {
             weightedAverage = val;
             return this;
         }
