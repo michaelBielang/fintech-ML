@@ -1,6 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.services.algos.RSI;
+import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
@@ -20,8 +20,6 @@ public class Test {
     @Autowired
     private PoloniexApiService poloniexApiService;
 
-    @Autowired
-    private RSI rsi;
 
     public void testFetchAndSave() {
         try {
@@ -37,7 +35,8 @@ public class Test {
     public void testRsi() {
         try {
             final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), "BTC_ETH", Periods.oneDay);
-            rsi.calculateEma(chartDataVOS,5, chartDataVOS.size());
+            Algorithms.getRsi(chartDataVOS, 5);
+            System.out.println(Algorithms.getMac(chartDataVOS));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

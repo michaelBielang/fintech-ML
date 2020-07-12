@@ -1,23 +1,23 @@
 package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 
+import com.bachelorthesis.supervised_problem_solving.dl4jApp.vo.ResultSet;
 import com.bachelorthesis.supervised_problem_solving.dl4jApp.vo.TechnicalIndicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Dl4jLinearRegressionService {
 
+    private final List<ResultSet> resultSetList = new LinkedList<>();
+
     // nMinute future return
-    final int tradingFrequency = 60;
+    private final int tradingFrequency = 60;
 
     // vector of nMinute returns that we want to use as the
-    final int[] nMinReturns = new int[]{5, 10, 15, 20, 25, 30, 60};
-
-    public void setup() {
-
-    }
+    private final int[] nMinReturns = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     /**
      * price - timetable of prices. I MAKE THE ASSUMPTION THAT THIS VARIABLE
