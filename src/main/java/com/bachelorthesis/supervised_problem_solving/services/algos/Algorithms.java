@@ -31,12 +31,18 @@ public class Algorithms {
     /**
      * > 70 overbought
      * < 30 oversold
+     * The RSI Indicator measures the ratio of moves higher to moves lower in a specific period.
+     * Wilder preferred a period of 14 (minutes, hours, days, etc.). up-moves to down-moves.
+     * The RSI index is expressed in a range of 0-100.
      *
      * @param chartDataVOList
-     * @param bars
+     * @param bars            0 = default || > 5; numbers of bars to consider
      * @return
      */
-    public static List<Num> getRsi(final List<ChartDataVO> chartDataVOList, final int bars) {
+    public static List<Num> getRsi(final List<ChartDataVO> chartDataVOList, int bars) {
+        if (bars < 5) {
+            bars = 5;
+        }
         initBars(chartDataVOList);
 
         RSIIndicator rsiIndicator = new RSIIndicator(new ClosePriceIndicator(series), bars);
@@ -47,6 +53,12 @@ public class Algorithms {
         return indicatorResults;
     }
 
+    /**
+     * Default short bar count: 12 and long bar count: 26
+     *
+     * @param chartDataVOList
+     * @return
+     */
     public static List<Num> getMac(final List<ChartDataVO> chartDataVOList) {
         initBars(chartDataVOList);
 

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PoloniexApiServiceTest {
+class PoloniexApiServiceTest {
 
     private static PoloniexApiService poloniexApiService;
     private static List<ChartDataVO> chartDataVOList;

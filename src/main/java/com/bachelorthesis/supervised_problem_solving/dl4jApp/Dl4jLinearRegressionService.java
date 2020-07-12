@@ -1,23 +1,24 @@
 package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 
+import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.dl4jApp.vo.ResultSet;
-import com.bachelorthesis.supervised_problem_solving.dl4jApp.vo.TechnicalIndicators;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
+import lombok.Data;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getFactorNames;
+
+@Data
 public class Dl4jLinearRegressionService {
 
     private final List<ResultSet> resultSetList = new LinkedList<>();
+    private final List<Periods> periods;
 
-    // nMinute future return
-    private final int tradingFrequency = 60;
-
-    // vector of nMinute returns that we want to use as the
-    private final int[] nMinReturns = new int[]{5, 10, 15, 20, 25, 30, 60};
+    // delta between bars
+    private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     /**
      * price - timetable of prices. I MAKE THE ASSUMPTION THAT THIS VARIABLE
@@ -29,7 +30,7 @@ public class Dl4jLinearRegressionService {
      * @param technicalIndicatorsList function handles referring to other signals
      * @param downSample
      */
-    public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<TechnicalIndicators> technicalIndicatorsList,
+    public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList,
                                  final boolean downSample) {
         // chartDataVO; date, min, bid, ask
         // nMinReturns; see field
@@ -46,30 +47,10 @@ public class Dl4jLinearRegressionService {
         //minFutReturn --> tradingFrequency
 
 
-        final List<String> factorNames = Arrays.stream(nMinReturns)
-                .mapToObj(entry -> "Return_" + entry)
-                .collect(Collectors.toList());
-        factorNames.addAll((createSignalTimeFrameList(technicalIndicatorsList)));
-
-        final List<Integer> allFactors = factorNames.stream()
-                .map(entry -> technicalIndicatorsList.size())
-                .collect(Collectors.toList());
-
-        final int factorCount = factorNames.size();
+        final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
 
     }
 
 
-    public List<String> createSignalTimeFrameList(List<TechnicalIndicators> technicalIndicatorsList) {
-        return technicalIndicatorsList.stream()
-                .map(entry ->
-                {
-                    if (entry.getTimeFrame().isPresent()) {
-                        return entry.getSignalName() + "_" + entry.getTimeFrame().get();
-                    }
-                    return entry.getSignalName();
-                })
-                .collect(Collectors.toList());
-    }
 
 }
