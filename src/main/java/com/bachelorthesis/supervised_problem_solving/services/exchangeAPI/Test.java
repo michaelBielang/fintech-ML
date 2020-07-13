@@ -35,7 +35,8 @@ public class Test {
     public void testRsi() {
         try {
             final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), "BTC_ETH", Periods.oneDay);
-            Algorithms.getRsi(chartDataVOS, 5);
+            System.out.println(chartDataVOS.size());
+            System.out.println(Algorithms.getRsi(chartDataVOS, 5).size());
             System.out.println(Algorithms.getMac(chartDataVOS));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

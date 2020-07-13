@@ -3,13 +3,13 @@ package com.bachelorthesis.supervised_problem_solving.dl4jApp.vo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 @Data
 public class ResultSet {
 
     private final LocalDateTime localDateTime;
-    private final Map<String, Double> indicatorToValues = new LinkedHashMap<>();
-    private final Map<String, Double> returnsToValues = new LinkedHashMap<>();
+    private final List<Double> indicatorValues = new LinkedList<>();
+    private final List<Double> returns = new LinkedList<>();
 }

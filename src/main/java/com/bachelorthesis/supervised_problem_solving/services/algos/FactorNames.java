@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 public class FactorNames {
 
 
+    /**
+     * @param technicalIndicatorsList
+     * @param barDelta
+     * @return list with returns, size barDelta.length + multiple values
+     */
     public static List<String> getFactorNames(List<Indicators> technicalIndicatorsList, final int[] barDelta) {
 
         // add returns
@@ -30,7 +35,7 @@ public class FactorNames {
         technicalIndicatorsList.forEach(indicator -> {
             switch (indicator) {
                 case RSI:
-                    signalList.addAll(loadBarDeltas(indicator).stream()
+                    signalList.addAll(getIndicatorDeltas(indicator).stream()
                             .map(barDelta -> indicator + "_" + barDelta)
                             .collect(Collectors.toList()));
                     break;
@@ -44,7 +49,7 @@ public class FactorNames {
         return signalList;
     }
 
-    private static List<Integer> loadBarDeltas(final Indicators indicators) {
+    public static List<Integer> getIndicatorDeltas(final Indicators indicators) {
         switch (indicators) {
             case RSI:
                 return List.of(7, 14, 21);
