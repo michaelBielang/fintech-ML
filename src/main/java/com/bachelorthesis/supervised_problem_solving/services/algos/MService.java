@@ -7,15 +7,14 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.List;
 
+import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getRowsToIgnore;
+
 public class MService {
 
     private static int rows;
-    private static int rowsToIgnore;
-
     public static INDArray getFilledMatrix(List<ChartDataVO> chartDataVOList, List<String> factorNames,
                                            final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
-        MService.rows = chartDataVOList.size();
-        MService.rowsToIgnore = barDeltas.length;
+        MService.rows = chartDataVOList.size() - 1;
 
         final INDArray factorMatrix = createEmptyFactorMatrix(factorNames);
         fillMatrixWithResults(factorNames, technicalIndicatorsList, factorMatrix, chartDataVOList, barDeltas);
@@ -30,15 +29,16 @@ public class MService {
 
             if (index < barDeltas.length) {
 
+                final int returnsToIgnore = getRowsToIgnore() - barDeltas[index];
                 final List<Double> returns = Algorithms.getReturns(chartDataVOList, barDeltas[index])
-                        .subList(rowsToIgnore, rows);
+                        .subList(returnsToIgnore, rows- barDeltas[index]);
 
                 final INDArray indArray = Nd4j.create(returns);
 
                 factorMatrix.getColumn(index).addi(indArray);
             } else {
                 final List<List<Double>> indicatorValues = Algorithms.getIndicatorValues(chartDataVOList, technicalIndicatorsList);
-                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length).subList(rowsToIgnore, rows));
+                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length).subList(getRowsToIgnore(), rows));
 
                 factorMatrix.getColumn(index).addi(indArray);
             }
@@ -47,7 +47,7 @@ public class MService {
 
     private static INDArray createEmptyFactorMatrix(List<String> factorNames) {
         final int columns = factorNames.size();
-        final int rows = MService.rows - rowsToIgnore;
+        final int rows = MService.rows - getRowsToIgnore();
 
         return Nd4j.zeros(rows, columns);
     }

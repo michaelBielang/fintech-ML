@@ -1,6 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
+import com.bachelorthesis.supervised_problem_solving.dl4jApp.Dl4jLinearRegressionService;
+import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
@@ -34,10 +35,9 @@ public class Test {
 
     public void testRsi() {
         try {
-            final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(1), LocalDateTime.now(), "BTC_ETH", Periods.oneDay);
-            System.out.println(chartDataVOS.size());
-            System.out.println(Algorithms.getRsi(chartDataVOS, 5).size());
-            System.out.println(Algorithms.getMac(chartDataVOS));
+            final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(2), LocalDateTime.now(), "BTC_ETH", Periods.oneDay);
+            final Dl4jLinearRegressionService dl4jLinearRegressionService = new Dl4jLinearRegressionService();
+            dl4jLinearRegressionService.calculateSignals(chartDataVOS, List.of(Indicators.RSI, Indicators.MACD));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
