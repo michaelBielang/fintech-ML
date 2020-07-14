@@ -1,5 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.services.algos;
 
+import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import org.ta4j.core.BarSeries;
@@ -19,12 +20,13 @@ public class Algorithms {
     private static BarSeries series;
 
     public static List<Double> getReturns(final List<ChartDataVO> chartDataVOS, final int delta) {
-        final List<Double> resultSet = new LinkedList<>();
+        final List<Double> resultList = new LinkedList<>();
 
         for (int start = 0; start < chartDataVOS.size() - delta; start++) {
-            resultSet.add(chartDataVOS.get(delta + start).getClose() - chartDataVOS.get(start).getClose());
+            resultList.add(chartDataVOS.get(delta + start).getClose() - chartDataVOS.get(start).getClose());
         }
-        return resultSet;
+
+        return resultList.subList(resultList.size() - RuntimeDataStorage.getMatrixRowLength(), resultList.size());
     }
 
     /**
@@ -45,11 +47,15 @@ public class Algorithms {
         initBars(chartDataVOList);
 
         RSIIndicator rsiIndicator = new RSIIndicator(new ClosePriceIndicator(series), bars);
+        return setupList(chartDataVOList, rsiIndicator);
+    }
+
+    private static List<Double> setupList(List<ChartDataVO> chartDataVOList, RSIIndicator rsiIndicator) {
         final List<Double> indicatorResults = new ArrayList<>();
         for (int i = 0; i < chartDataVOList.size(); i++) {
             indicatorResults.add(rsiIndicator.getValue(i).doubleValue());
         }
-        return indicatorResults;
+        return indicatorResults.subList(indicatorResults.size() - RuntimeDataStorage.getMatrixRowLength(), indicatorResults.size());
     }
 
     /**
@@ -66,7 +72,7 @@ public class Algorithms {
         for (int i = 0; i < chartDataVOList.size(); i++) {
             indicatorResults.add(rsiIndicator.getValue(i).doubleValue());
         }
-        return indicatorResults;
+        return indicatorResults.subList(indicatorResults.size() - RuntimeDataStorage.getMatrixRowLength(), indicatorResults.size());
     }
 
     private static void initBars(List<ChartDataVO> chartDataVOList) {

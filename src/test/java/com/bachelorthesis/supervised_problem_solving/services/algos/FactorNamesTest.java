@@ -12,19 +12,12 @@ class FactorNamesTest {
     // delta between bars
     private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
 
-    private static final int INDICATOR_DELTA = 21;
-
     @Test
     public void getFactorNames() {
         final List<Indicators> indicators = List.of(Indicators.MACD, Indicators.RSI);
 
         final List<String> factorNames = FactorNames.getFactorNames(indicators, barDelta);
         assertEquals(11, factorNames.size());
-    }
-
-    @Test
-    public void getRowsToIgnore() {
-        assertEquals(INDICATOR_DELTA, FactorNames.getRowsToIgnore());
     }
 
     @Test

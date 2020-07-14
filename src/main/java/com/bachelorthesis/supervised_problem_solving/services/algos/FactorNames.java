@@ -59,8 +59,4 @@ public class FactorNames {
                 return Collections.emptyList();
         }
     }
-
-    public static int getRowsToIgnore() {
-        return Collections.max(getIndicatorDeltas(Indicators.RSI));
-    }
 }

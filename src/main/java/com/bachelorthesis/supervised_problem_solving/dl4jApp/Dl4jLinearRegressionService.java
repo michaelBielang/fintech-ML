@@ -1,5 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 
+import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
@@ -12,6 +13,8 @@ import static com.bachelorthesis.supervised_problem_solving.services.algos.Facto
 
 @Data
 public class Dl4jLinearRegressionService {
+
+    private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
 
 /*
     // delta between bars
@@ -32,9 +35,12 @@ public class Dl4jLinearRegressionService {
      */
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) {
 
+        runtimeDatastorage.findAndSetMaximumMatrixRows(technicalIndicatorsList, barDelta);
+
         final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
 
         final INDArray factorMatrix = MatrixService.getFilledMatrix(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+
         System.out.println(factorNames);
         System.out.println(factorMatrix);
     }
