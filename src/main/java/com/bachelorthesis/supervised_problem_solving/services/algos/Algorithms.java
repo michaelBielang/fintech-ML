@@ -27,10 +27,6 @@ public class Algorithms {
         return resultSet;
     }
 
-    public static double getReturn(final List<ChartDataVO> chartDataVOS, final int index, final int delta) {
-        return chartDataVOS.get(delta + index).getClose() - chartDataVOS.get(index).getClose();
-    }
-
     /**
      * > 70 overbought
      * < 30 oversold

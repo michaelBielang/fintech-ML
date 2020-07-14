@@ -9,12 +9,12 @@ import java.util.List;
 
 import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getRowsToIgnore;
 
-public class MService {
+public class MatrixService {
 
     private static int rows;
     public static INDArray getFilledMatrix(List<ChartDataVO> chartDataVOList, List<String> factorNames,
                                            final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
-        MService.rows = chartDataVOList.size() - 1;
+        MatrixService.rows = chartDataVOList.size() - 1;
 
         final INDArray factorMatrix = createEmptyFactorMatrix(factorNames);
         fillMatrixWithResults(factorNames, technicalIndicatorsList, factorMatrix, chartDataVOList, barDeltas);
@@ -47,7 +47,7 @@ public class MService {
 
     private static INDArray createEmptyFactorMatrix(List<String> factorNames) {
         final int columns = factorNames.size();
-        final int rows = MService.rows - getRowsToIgnore();
+        final int rows = MatrixService.rows - getRowsToIgnore();
 
         return Nd4j.zeros(rows, columns);
     }

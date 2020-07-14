@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
-import com.bachelorthesis.supervised_problem_solving.services.algos.MService;
+import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.Data;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -34,7 +34,7 @@ public class Dl4jLinearRegressionService {
 
         final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
 
-        final INDArray factorMatrix = MService.getFilledMatrix(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        final INDArray factorMatrix = MatrixService.getFilledMatrix(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
         System.out.println(factorNames);
         System.out.println(factorMatrix);
     }
