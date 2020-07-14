@@ -54,7 +54,7 @@ public class FactorNames {
             case RSI:
                 return List.of(7, 14, 21);
             case MACD:
-                return List.of(12, 26);
+                return List.of(12); // default 12,26
             default:
                 return Collections.emptyList();
         }

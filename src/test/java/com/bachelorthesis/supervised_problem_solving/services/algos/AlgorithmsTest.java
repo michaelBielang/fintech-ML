@@ -1,5 +1,6 @@
 package com.bachelorthesis.supervised_problem_solving.services.algos;
 
+import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.bachelorthesis.supervised_problem_solving.enums.Indicators.MACD;
+import static com.bachelorthesis.supervised_problem_solving.enums.Indicators.RSI;
+import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getIndicatorDeltas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AlgorithmsTest {
@@ -90,9 +94,30 @@ class AlgorithmsTest {
 
     @Test
     void getMac() {
+        assertEquals(Algorithms.getMac(CHART_DATA_VOS_BOUNCING), Algorithms.getMac(CHART_DATA_VOS_BOUNCING_INVERSED));
+        assertEquals(Algorithms.getMac(CHART_DATA_VOS_BOUNCING), Algorithms.getMac(CHART_DATA_VOS_100));
     }
 
     @Test
     void getIndicatorValues() {
+        final List<Indicators> indicatorsList = List.of(RSI, MACD);
+        final List<List<Double>> indicatorValues = Algorithms.getIndicatorValues(CHART_DATA_VOS_100, indicatorsList);
+
+
+        indicatorsList.forEach(indicator -> {
+            final int[] index = new int[]{0};
+            switch (indicator) {
+                case RSI:
+                    getIndicatorDeltas(indicator).forEach(indicatorValue -> {
+                        assertEquals(Algorithms.getRsi(CHART_DATA_VOS_100, indicatorValue), indicatorValues.get(index[0]++));
+                    });
+                    break;
+                case MACD:
+                    getIndicatorDeltas(indicator).forEach(indicatorValue -> {
+                        assertEquals(Algorithms.getMac(CHART_DATA_VOS_100), indicatorValues.get(index[0]++));
+                    });
+                    break;
+            }
+        });
     }
 }
