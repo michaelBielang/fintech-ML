@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.bachelorthesis.supervised_problem_solving.enums.Indicators.getAllIndicators;
+import static com.bachelorthesis.supervised_problem_solving.enums.Indicators.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MatrixServiceTest {
 
@@ -42,22 +43,46 @@ class MatrixServiceTest {
 
     @Test
     void getFilledMatrix() {
-        final List<Indicators> indicatorsList = getAllIndicators();
+        final List<Indicators> indicatorsList = List.of(RSI, MACD);
         final List<String> factorNames = FactorNames.getFactorNames(indicatorsList, BAR_DELTA);
         final List<Double> profit5 = Algorithms.getReturns(CHART_DATA_VOS_100, 5);
         final List<Double> profit10 = Algorithms.getReturns(CHART_DATA_VOS_100, 10);
         final List<Double> profit15 = Algorithms.getReturns(CHART_DATA_VOS_100, 15);
+        final List<Double> rsi7 = Algorithms.getRsi(CHART_DATA_VOS_100, 7);
+        final List<Double> rsi14 = Algorithms.getRsi(CHART_DATA_VOS_100, 14);
+        final List<Double> rsi21 = Algorithms.getRsi(CHART_DATA_VOS_100, 21);
 
         INDArray indArray = MatrixService.getFilledMatrix(CHART_DATA_VOS_100, factorNames, BAR_DELTA, indicatorsList);
         final List<Double> profit5ColumnFromMatrix = new LinkedList<>();
         for (double v : indArray.getColumn(0).toDoubleVector()) {
             profit5ColumnFromMatrix.add(v);
         }
-        System.out.println(profit5ColumnFromMatrix.size());
-        System.out.println(profit5.size());
-        System.out.println(profit5.equals(profit5ColumnFromMatrix));
+        final List<Double> profit10ColumnFromMatrix = new LinkedList<>();
+        for (double v : indArray.getColumn(1).toDoubleVector()) {
+            profit10ColumnFromMatrix.add(v);
+        }
+        final List<Double> profit15ColumnFromMatrix = new LinkedList<>();
+        for (double v : indArray.getColumn(2).toDoubleVector()) {
+            profit15ColumnFromMatrix.add(v);
+        }
+        final List<Double> rsi7Matrix = new LinkedList<>();
+        for (double v : indArray.getColumn(3).toDoubleVector()) {
+            rsi7Matrix.add(v);
+        }
+        final List<Double> rsi14Matrix = new LinkedList<>();
+        for (double v : indArray.getColumn(4).toDoubleVector()) {
+            rsi14Matrix.add(v);
+        }
+        final List<Double> rsi21Matrix = new LinkedList<>();
+        for (double v : indArray.getColumn(5).toDoubleVector()) {
+            rsi21Matrix.add(v);
+        }
+        assertEquals(profit5, profit5ColumnFromMatrix);
+        assertEquals(profit10, profit10ColumnFromMatrix);
+        assertEquals(profit15, profit15ColumnFromMatrix);
 
-        System.out.println(CHART_DATA_VOS_100.size());
-        System.out.println(indArray.getColumn(0).length());
+        assertEquals(rsi7, rsi7Matrix);
+        assertEquals(rsi14, rsi14Matrix);
+        assertEquals(rsi21, rsi21Matrix);
     }
 }
