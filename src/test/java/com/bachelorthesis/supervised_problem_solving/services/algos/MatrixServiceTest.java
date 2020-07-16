@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MatrixServiceTest {
 
     private final static List<ChartDataVO> CHART_DATA_VOS_100 = new LinkedList<>();
-    private final static int DELTA = 5;
     private final static int ELEMENTS_TO_BE_CREATED = 210;
     private final static int[] BAR_DELTA = new int[]{5, 10, 15};
 
@@ -52,7 +51,7 @@ class MatrixServiceTest {
         final List<Double> rsi14 = Algorithms.getRsi(CHART_DATA_VOS_100, 14);
         final List<Double> rsi21 = Algorithms.getRsi(CHART_DATA_VOS_100, 21);
 
-        INDArray indArray = MatrixService.getFilledMatrix(CHART_DATA_VOS_100, factorNames, BAR_DELTA, indicatorsList);
+        INDArray indArray = MatrixService.fillMatrixWithPredictors(CHART_DATA_VOS_100, factorNames, BAR_DELTA, indicatorsList);
         final List<Double> profit5ColumnFromMatrix = new LinkedList<>();
         for (double v : indArray.getColumn(0).toDoubleVector()) {
             profit5ColumnFromMatrix.add(v);

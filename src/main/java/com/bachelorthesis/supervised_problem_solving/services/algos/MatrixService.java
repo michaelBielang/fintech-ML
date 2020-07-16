@@ -10,11 +10,8 @@ import java.util.List;
 
 public class MatrixService {
 
-    private static int rows;
-
-    public static INDArray getFilledMatrix(List<ChartDataVO> chartDataVOList, List<String> factorNames,
-                                           final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
-        MatrixService.rows = RuntimeDataStorage.getMatrixRowLength();
+    public static INDArray fillMatrixWithPredictors(List<ChartDataVO> chartDataVOList, List<String> factorNames,
+                                                    final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
 
         final INDArray factorMatrix = createEmptyFactorMatrix(factorNames);
         fillMatrixWithResults(factorNames, technicalIndicatorsList, factorMatrix, chartDataVOList, barDeltas);
@@ -40,7 +37,8 @@ public class MatrixService {
             } else {
                 final List<List<Double>> indicatorValues = Algorithms.getIndicatorValues(chartDataVOList, technicalIndicatorsList);
                 final int entriesToRemove = indicatorValues.get(index - barDeltas.length).size() - expectedRows;
-                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length).subList(entriesToRemove, indicatorValues.get(index - barDeltas.length).size()));
+                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length)
+                        .subList(entriesToRemove, indicatorValues.get(index - barDeltas.length).size()));
 
                 factorMatrix.getColumn(index).addi(indArray);
             }

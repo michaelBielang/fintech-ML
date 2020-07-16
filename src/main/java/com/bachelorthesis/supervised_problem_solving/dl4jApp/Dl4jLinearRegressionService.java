@@ -2,6 +2,7 @@ package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
+import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
 import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.Data;
@@ -15,6 +16,8 @@ import static com.bachelorthesis.supervised_problem_solving.services.algos.Facto
 public class Dl4jLinearRegressionService {
 
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
+
+    private final int tradingFrequency = 60;
 
 /*
     // delta between bars
@@ -35,14 +38,26 @@ public class Dl4jLinearRegressionService {
      */
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) {
 
-        runtimeDatastorage.findAndSetMaximumMatrixRows(technicalIndicatorsList, barDelta);
+        runtimeDatastorage.findAndSetMaximumMatrixRows(technicalIndicatorsList, barDelta, tradingFrequency);
 
         final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
 
-        final INDArray factorMatrix = MatrixService.getFilledMatrix(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        // fill matrix with predictors
+
+        // xInSample
+        final INDArray factorMatrix = MatrixService.fillMatrixWithPredictors(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+
+        // y in Sample
+        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);
+
+        // train linear regression model --> modelTrain = fitlm([XInSample yInSample] , 'linear')
+
+
 
         System.out.println(factorNames);
         System.out.println(factorMatrix);
     }
 
+    // TODO: 16.07.2020 create linear regression model
+    // train model
 }

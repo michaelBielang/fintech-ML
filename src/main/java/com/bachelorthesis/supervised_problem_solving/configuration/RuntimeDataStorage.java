@@ -11,7 +11,7 @@ public class RuntimeDataStorage {
 
     private static int matrixRowLength;
 
-    public void findAndSetMaximumMatrixRows(List<Indicators> technicalIndicatorsList, int[] barDeltas) {
+    public void findAndSetMaximumMatrixRows(List<Indicators> technicalIndicatorsList, int[] barDeltas, final int tradingFrequency) {
         int maximum = 0;
         for (Indicators indicator : technicalIndicatorsList) {
             int maxFromIndicator = Collections.max(FactorNames.getIndicatorDeltas(indicator));
@@ -24,7 +24,7 @@ public class RuntimeDataStorage {
                 maximum = delta;
             }
         }
-        RuntimeDataStorage.matrixRowLength = maximum;
+        RuntimeDataStorage.matrixRowLength = Math.max(maximum, tradingFrequency);
     }
 
     public static int getMatrixRowLength() {
