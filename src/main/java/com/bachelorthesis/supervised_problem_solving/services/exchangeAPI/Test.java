@@ -6,6 +6,8 @@ import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloni
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import com.bachelorthesis.supervised_problem_solving.storage.Storage;
+import org.n52.matlab.control.MatlabConnectionException;
+import org.n52.matlab.control.MatlabInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,7 @@ public class Test {
             final List<ChartDataVO> chartDataVOS = poloniexApiService.getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now(), "BTC_ETH", Periods.oneDay);
             final Matlab4Regression matlab4Regression = new Matlab4Regression();
             matlab4Regression.calculateSignals(chartDataVOS, List.of(Indicators.RSI, Indicators.MACD));
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
             e.printStackTrace();
         }
     }
