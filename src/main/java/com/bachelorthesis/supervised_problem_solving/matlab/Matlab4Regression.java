@@ -17,6 +17,7 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import scala.collection.mutable.StringBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class Matlab4Regression {
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
+
 
         init(chartDataVOList, technicalIndicatorsList);
         final List<String> factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
@@ -63,14 +65,19 @@ public class Matlab4Regression {
         // get the proxy
         MatlabProxy proxy = factory.getProxy();
 
-        proxy.eval("addpath('C:\\git\\supervised_problem_solving\\matlab')");
+        proxy.eval("addpath('" + getPath().toString() + "')");
         proxy.feval("BA_Michael_Bielang_Regression");
 
         // call user-defined function (must be on the path)
 
-
         // close connection
         proxy.disconnect();
+    }
+
+    private StringBuilder getPath() {
+        final StringBuilder path = new StringBuilder(System.getProperty("user.dir").replace("\\", "\\\\"));
+        path.append("\\matlab");
+        return path;
     }
 
     private Dataset<Row> getIndicatorDataSet(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames, SparkSession spark) {
