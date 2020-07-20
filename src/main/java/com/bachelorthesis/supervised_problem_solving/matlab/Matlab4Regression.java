@@ -32,28 +32,50 @@ public class Matlab4Regression {
 
     private static final int TRADING_FREQUENCY = 60;
 
+    private SparkSession sparkSession;
+
+    private List<String> factorNames;
+
     // delta between bars
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
 
-    public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
+    public void calculateSignals(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
 
-
-        init(chartDataVOList, technicalIndicatorsList);
-        final List<String> factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
-        final SparkSession spark = setupSpark();
+        factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
+        this.sparkSession = setupSpark();
 
         // y in Sample
-        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, TRADING_FREQUENCY);
-
-        final Dataset<Row> indicatorDataSet = getIndicatorDataSet(chartDataVOList, technicalIndicatorsList, factorNames, spark);
-        saveDataToCSV(spark, indicatorDataSet, "indicatorData", false);
-        saveDataToCSV(spark, indicatorDataSet, "fullTable", true);
-
-        final Dataset<Double> futureReturnsDataSet = spark.createDataset(futureReturns, Encoders.DOUBLE());
-        saveDataToCSV(spark, futureReturnsDataSet, "futureReturns", false);
+        createPastData(pastData, technicalIndicatorsList);
+        createTestData(testData, technicalIndicatorsList);
 
         runMatlab();
         return;
+    }
+
+    private void createTestData(List<ChartDataVO> testData, List<Indicators> technicalIndicatorsList) throws IOException {
+        setupEnvironment(testData, technicalIndicatorsList);
+
+        final List<Double> futureReturns = Algorithms.getReturns(testData, TRADING_FREQUENCY);
+
+        final Dataset<Row> indicatorDataSet = getIndicatorDataSet(testData, technicalIndicatorsList, factorNames);
+        saveDataToCSV(indicatorDataSet, "testData", true);
+        //saveDataToCSV(indicatorDataSet, "fullTable", true); not yet necessary
+
+        final Dataset<Double> futureReturnsDataSet = sparkSession.createDataset(futureReturns, Encoders.DOUBLE());
+        saveDataToCSV(futureReturnsDataSet, "returns", true);
+    }
+
+    private void createPastData(List<ChartDataVO> pastData, List<Indicators> technicalIndicatorsList) throws IOException {
+        setupEnvironment(pastData, technicalIndicatorsList);
+
+        final List<Double> futureReturns = Algorithms.getReturns(pastData, TRADING_FREQUENCY);
+
+        final Dataset<Row> indicatorDataSet = getIndicatorDataSet(pastData, technicalIndicatorsList, factorNames);
+        saveDataToCSV(indicatorDataSet, "trainingData", true);
+        //saveDataToCSV(indicatorDataSet, "fullTable", true); not yet necessary
+
+        final Dataset<Double> futureReturnsDataSet = sparkSession.createDataset(futureReturns, Encoders.DOUBLE());
+        saveDataToCSV(futureReturnsDataSet, "futureReturns", true);
     }
 
     public void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
@@ -65,10 +87,9 @@ public class Matlab4Regression {
         // get the proxy
         MatlabProxy proxy = factory.getProxy();
 
+        // call user-defined function (must be on the path)
         proxy.eval("addpath('" + getPath().toString() + "')");
         proxy.feval("BA_Michael_Bielang_Regression");
-
-        // call user-defined function (must be on the path)
 
         // close connection
         proxy.disconnect();
@@ -80,7 +101,7 @@ public class Matlab4Regression {
         return path;
     }
 
-    private Dataset<Row> getIndicatorDataSet(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames, SparkSession spark) {
+    private Dataset<Row> getIndicatorDataSet(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames) {
         List<Row> rows = ApacheMatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
@@ -90,7 +111,7 @@ public class Matlab4Regression {
 
         final StructType schemata = DataTypes.createStructType(structFields);
 
-        return spark.createDataFrame(rows, schemata);
+        return sparkSession.createDataFrame(rows, schemata);
     }
 
     private SparkSession setupSpark() {
@@ -100,19 +121,19 @@ public class Matlab4Regression {
         return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
-    private void init(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList) {
+    private void setupEnvironment(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList) {
         runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, BAR_DELTA, TRADING_FREQUENCY);
         validateNumberOfDataPoints(chartDataVOList);
     }
 
-    private void saveDataToCSV(SparkSession spark, Dataset<?> dataSet, String dataType, boolean withHeader) throws IOException {
+    private void saveDataToCSV(Dataset<?> dataSet, String dataType, boolean withHeader) throws IOException {
         dataSet.coalesce(1).
                 write().
                 mode("overwrite").
                 format("com.databricks.spark.csv").
                 option("header", String.valueOf(withHeader)).
                 save("tmp.csv");
-        val fs = FileSystem.get(spark.sparkContext().hadoopConfiguration());
+        val fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
         File dir = new File(System.getProperty("user.dir") + "/tmp.csv/");
         File[] files = dir.listFiles((d, name) -> name.endsWith(".csv"));
         fs.rename(new Path(files[0].toURI()), new Path(System.getProperty("user.dir") + "/matlab/" + dataType + ".csv"));

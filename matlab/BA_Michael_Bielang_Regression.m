@@ -21,8 +21,10 @@
 % We will take EURUSD as the pair in question.
 
 function BA_Michael_Bielang_Regression()
-    tr = timerange('2007-01-01' , '2007-02-28');
-    dataXin = readtable('matlab/fullTable.csv','PreserveVariableNames',true);
+
+    %% IN SAMPLE
+
+    dataXin = readtable('matlab/trainingData.csv','PreserveVariableNames',true);
     dataYin = readtable('matlab/futureReturns.csv','PreserveVariableNames',true);
     % tIn = X.Time(tr);
     modelTrain = fitlm([dataXin dataYin] , 'linear');
@@ -39,5 +41,24 @@ function BA_Michael_Bielang_Regression()
     f1 = figure('tag' , 'insamplefigure');
     plot(tIn , inSampleRegressionReturns);
     title('In-Sample Results');
+    
+    %% OUT Sample
+    
+    dataXpast = readtable('matlab/testData.csv','PreserveVariableNames',true);
+    dataYpast = readtable('matlab/returns.csv','PreserveVariableNames',true);
+
+    retPred = predict(modelTrain , dataXpast);
+
+    positions=zeros(size(dataXpast,1), 1);
+    positions(retPred > 0)=1;
+    positions(retPred < 0)=-1;
+
+    actualReturns = positions .* dataYpast{:,1};
+    outSampleRegressionReturns = cumprod(1 + actualReturns);
+
+    tOut = 1:length(outSampleRegressionReturns);
+    f2 = figure('tag' , 'outsamplefigure');
+    plot(tOut , outSampleRegressionReturns)
+    title('Out-Sample Results');
 end
 
