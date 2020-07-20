@@ -8,7 +8,7 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.List;
 
-public class MatrixService {
+public class Dl4JMatrixService {
 
     public static INDArray fillMatrixWithPredictors(List<ChartDataVO> chartDataVOList, List<String> factorNames,
                                                     final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
@@ -28,17 +28,13 @@ public class MatrixService {
             if (index < barDeltas.length) {
 
                 List<Double> returns = Algorithms.getReturns(chartDataVOList, barDeltas[index]);
-                final int entriesToRemove = returns.size() - expectedRows;
-                returns = returns.subList(entriesToRemove, returns.size());
 
                 final INDArray indArray = Nd4j.create(returns);
 
                 factorMatrix.getColumn(index).addi(indArray);
             } else {
                 final List<List<Double>> indicatorValues = Algorithms.getIndicatorValues(chartDataVOList, technicalIndicatorsList);
-                final int entriesToRemove = indicatorValues.get(index - barDeltas.length).size() - expectedRows;
-                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length)
-                        .subList(entriesToRemove, indicatorValues.get(index - barDeltas.length).size()));
+                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length));
 
                 factorMatrix.getColumn(index).addi(indArray);
             }

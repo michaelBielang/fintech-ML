@@ -3,6 +3,7 @@ package com.bachelorthesis.supervised_problem_solving.services.algos;
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
+import org.apache.commons.lang3.ArrayUtils;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.indicators.MACDIndicator;
@@ -27,6 +28,11 @@ public class Algorithms {
         }
 
         return resultList.subList(resultList.size() - RuntimeDataStorage.getMatrixRowLength(), resultList.size());
+    }
+
+    public static double[] toPrimitive(List<Double> doubleList) {
+        Double[] ds = doubleList.toArray(new Double[doubleList.size()]);
+        return ArrayUtils.toPrimitive(ds);
     }
 
     /**
