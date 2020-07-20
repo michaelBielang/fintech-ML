@@ -6,8 +6,8 @@ import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloni
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import com.bachelorthesis.supervised_problem_solving.storage.Storage;
-import org.n52.matlab.control.MatlabConnectionException;
-import org.n52.matlab.control.MatlabInvocationException;
+import matlabcontrol.MatlabConnectionException;
+import matlabcontrol.MatlabInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -20,4 +20,24 @@
 % of currency pairs.
 % We will take EURUSD as the pair in question.
 
-dataTable = readtable('fullTable.csv','PreserveVariableNames',true);
+function BA_Michael_Bielang_Regression()
+    tr = timerange('2007-01-01' , '2007-02-28');
+    dataXin = readtable('matlab/fullTable.csv','PreserveVariableNames',true);
+    dataYin = readtable('matlab/futureReturns.csv','PreserveVariableNames',true);
+    % tIn = X.Time(tr);
+    modelTrain = fitlm([dataXin dataYin] , 'linear');
+    retPredictionRegress = predict(modelTrain , dataXin);
+    
+    positions = zeros(size(retPredictionRegress));
+    positions(retPredictionRegress > 0) = 1;
+    positions(retPredictionRegress < 0) = -1;
+
+    actualReturns = positions .* dataYin{:,1};
+    inSampleRegressionReturns = cumprod(1+actualReturns);
+    
+    tIn = 1:length(inSampleRegressionReturns);
+    f1 = figure('tag' , 'insamplefigure');
+    plot(tIn , inSampleRegressionReturns);
+    title('In-Sample Results');
+end
+

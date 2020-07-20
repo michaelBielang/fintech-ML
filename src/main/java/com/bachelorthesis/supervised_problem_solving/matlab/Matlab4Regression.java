@@ -6,6 +6,7 @@ import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
 import com.bachelorthesis.supervised_problem_solving.services.algos.ApacheMatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.val;
+import matlabcontrol.*;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
@@ -16,7 +17,6 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.n52.matlab.control.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,19 +57,17 @@ public class Matlab4Regression {
     public void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
 
         // create proxy
-        MatlabProxyFactoryOptions options =
-                new MatlabProxyFactoryOptions.Builder()
-                        .setUsePreviouslyControlledSession(true)
-                        .build();
+        MatlabProxyFactoryOptions.Builder builder = new MatlabProxyFactoryOptions.Builder();
 
-        MatlabProxyFactory factory = new MatlabProxyFactory(options);
+        MatlabProxyFactory factory = new MatlabProxyFactory(builder.build());
+        // get the proxy
         MatlabProxy proxy = factory.getProxy();
 
-        // call builtin function
-        proxy.eval("disp('hello world')");
+        proxy.eval("addpath('C:\\git\\supervised_problem_solving\\matlab')");
+        proxy.feval("BA_Michael_Bielang_Regression");
 
         // call user-defined function (must be on the path)
-        proxy.feval(System.getProperty("user.dir") + "/matlab/" + "BA_Michael_Bielang_Regression.m");
+
 
         // close connection
         proxy.disconnect();

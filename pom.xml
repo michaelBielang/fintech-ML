@@ -100,11 +100,13 @@
             <version>1.0.0-beta7</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.n52.matlab/matlab-control -->
+        <!-- https://mvnrepository.com/artifact/com.diffplug.matsim/matconsolectl -->
         <dependency>
-            <groupId>org.n52.matlab</groupId>
-            <artifactId>matlab-control</artifactId>
-            <version>5.0.0</version>
+            <groupId>com.diffplug.matsim</groupId>
+            <artifactId>matconsolectl</artifactId>
+            <version>4.5.0</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
