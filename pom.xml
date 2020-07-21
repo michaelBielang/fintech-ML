@@ -87,14 +87,11 @@
             <artifactId>nd4j-native</artifactId>
             <version>1.0.0-beta7</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-core</artifactId>
             <version>1.0.0-beta7</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.n52.matlab/matlab-control -->
-        <!-- https://mvnrepository.com/artifact/com.diffplug.matsim/matconsolectl -->
         <dependency>
             <groupId>com.diffplug.matsim</groupId>
             <artifactId>matconsolectl</artifactId>
@@ -160,7 +157,6 @@
             <version>0.13</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -169,5 +165,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
