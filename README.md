@@ -6,9 +6,8 @@ This project ist part of my bachelor thesis with the title "Execution and analys
 
 ### Features
 
- 
  * [x] Fetching chart data from crypto exchange (www.poloniex.com)
- * [x] Demo: Make use of trading indicators (MACD and RSI)
+ * [x] Make use of trading indicators (MACD and RSI) *Demo-mode
  * [x] Prepare data for in app communication with Matlab
  * [x] Fully functional Matlab implementation for linear and stepwise regression analyse, prediction and backtesting
  * [x] Building and maintaining data structures via liquibase
@@ -18,16 +17,23 @@ This project ist part of my bachelor thesis with the title "Execution and analys
  * [x] Utilities to run and compare strategies
  * [x] Started: Support of Apache-Spark, DeepLearning4j
  
+### Todos
 
+ - Further implementation of Apache Spark Neural Networks
+ - Implement an UI (React support already present)
+ 
 ### Setup
 
-It is required to have Apache-Hadtoop installed.
+To use this demo it is required to have the following software installed
 
-This app was tested on a windows mashine only.
-To setup Hadtoop in windows please follow these instructions:
+  - Java 14+
+  - Apache-Hadtoop
+  - Matlab R2020a
 
-https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef
- 
+This app was tested on a Windows 10 machine only.
+
+To setup Hadtoop on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions:
+
 ### Maven dependencies
 
 ```xml
