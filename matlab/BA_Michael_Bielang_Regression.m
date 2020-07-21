@@ -86,6 +86,7 @@ function BA_Michael_Bielang_Regression()
     
     %% PLOT
 
+    figure;
     plot(tIn , inSampleRegressionReturns, 'b');
     hold on
     title('In-Sample Results');
@@ -94,11 +95,13 @@ function BA_Michael_Bielang_Regression()
     legend({'Linear Regression' , 'Stepwise'});
     hold off
     
+    figure;
     plot(tOut , outSampleRegressionReturns, 'b')
     hold on
     title('Out-Sample Results');
 
     plot(tOut , outSampleStepwiseReturns , 'r')
     legend({'Linear Regression' , 'Stepwise'});
+    hold off
 end
 
