@@ -3,12 +3,16 @@ package com.bachelorthesis.supervised_problem_solving.services.algos;
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class Dl4JMatrixService {
+public class MatrixService {
 
     public static INDArray fillMatrixWithPredictors(List<ChartDataVO> chartDataVOList, List<String> factorNames,
                                                     final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
@@ -52,5 +56,18 @@ public class Dl4JMatrixService {
         final int rows = RuntimeDataStorage.getMatrixRowLength();
 
         return Nd4j.zeros(rows, columns);
+    }
+
+    public static List<Row> getRowList(List<ChartDataVO> chartDataVOList, List<String> factorNames,
+                                       final int[] barDeltas, final List<Indicators> technicalIndicatorsList) {
+        final List<Row> rowList = new LinkedList<>();
+        final INDArray indArray = fillMatrixWithPredictors(chartDataVOList, factorNames, barDeltas, technicalIndicatorsList);
+
+        for (int rowIndex = 0; rowIndex < indArray.rows(); rowIndex++) {
+            final Double[] doubleVec = ArrayUtils.toObject(indArray.getRow(rowIndex).toDoubleVector());
+            final Row row = RowFactory.create((Object[]) doubleVec);
+            rowList.add(row);
+        }
+        return rowList;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import static com.bachelorthesis.supervised_problem_solving.enums.Indicators.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class Dl4JMatrixServiceTest {
+class MatrixServiceTest {
 
     private final static List<ChartDataVO> CHART_DATA_VOS_100 = new LinkedList<>();
     private final static int ELEMENTS_TO_BE_CREATED = 210;
@@ -51,7 +51,7 @@ class Dl4JMatrixServiceTest {
         final List<Double> rsi14 = Algorithms.getRsi(CHART_DATA_VOS_100, 14);
         final List<Double> rsi21 = Algorithms.getRsi(CHART_DATA_VOS_100, 21);
 
-        INDArray indArray = Dl4JMatrixService.fillMatrixWithPredictors(CHART_DATA_VOS_100, factorNames, BAR_DELTA, indicatorsList);
+        INDArray indArray = MatrixService.fillMatrixWithPredictors(CHART_DATA_VOS_100, factorNames, BAR_DELTA, indicatorsList);
         final List<Double> profit5ColumnFromMatrix = new LinkedList<>();
         for (double v : indArray.getColumn(0).toDoubleVector()) {
             profit5ColumnFromMatrix.add(v);

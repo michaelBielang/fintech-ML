@@ -3,7 +3,7 @@ package com.bachelorthesis.supervised_problem_solving.matlab;
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
-import com.bachelorthesis.supervised_problem_solving.services.algos.ApacheMatrixService;
+import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.val;
 import matlabcontrol.*;
@@ -45,7 +45,7 @@ public class Matlab4Regression {
         this.sparkSession = setupSpark();
 
         // y in Sample
-        setupEnvironment(pastData, testData, technicalIndicatorsList);
+
         createPastData(pastData, technicalIndicatorsList);
         createTestData(testData, technicalIndicatorsList);
 
@@ -54,7 +54,7 @@ public class Matlab4Regression {
     }
 
     private void createTestData(List<ChartDataVO> testData, List<Indicators> technicalIndicatorsList) throws IOException {
-
+        setupEnvironment(testData, technicalIndicatorsList);
         final List<Double> futureReturns = Algorithms.getReturns(testData, TRADING_FREQUENCY);
 
         final Dataset<Row> indicatorDataSet = getIndicatorDataSet(testData, technicalIndicatorsList, factorNames);
@@ -66,7 +66,7 @@ public class Matlab4Regression {
     }
 
     private void createPastData(List<ChartDataVO> pastData, List<Indicators> technicalIndicatorsList) throws IOException {
-
+        setupEnvironment(pastData, technicalIndicatorsList);
         final List<Double> futureReturns = Algorithms.getReturns(pastData, TRADING_FREQUENCY);
 
         final Dataset<Row> indicatorDataSet = getIndicatorDataSet(pastData, technicalIndicatorsList, factorNames);
@@ -102,7 +102,7 @@ public class Matlab4Regression {
     }
 
     private Dataset<Row> getIndicatorDataSet(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames) {
-        List<Row> rows = ApacheMatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
+        List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
         for (int i = 0; i < factorNames.size(); i++) {
@@ -121,9 +121,9 @@ public class Matlab4Regression {
         return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
-    private void setupEnvironment(List<ChartDataVO> pastData, List<ChartDataVO> testData, List<Indicators> technicalIndicatorsList) {
-        runtimeDatastorage.findAndSetMaximumMatrixRows(pastData, testData, technicalIndicatorsList, BAR_DELTA, TRADING_FREQUENCY);
-        validateNumberOfDataPoints(pastData);
+    private void setupEnvironment(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList) {
+        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, BAR_DELTA, TRADING_FREQUENCY);
+        validateNumberOfDataPoints(chartDataVOList);
     }
 
     private void saveDataToCSV(Dataset<?> dataSet, String dataType, boolean withHeader) throws IOException {

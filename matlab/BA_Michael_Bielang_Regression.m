@@ -20,6 +20,7 @@
 % of currency pairs.
 % We will take EURUSD as the pair in question.
 
+
 function BA_Michael_Bielang_Regression()
 
     %% IN SAMPLE
@@ -27,9 +28,13 @@ function BA_Michael_Bielang_Regression()
     dataXin = readtable('matlab/trainingData.csv','PreserveVariableNames',true);
     dataYin = readtable('matlab/futureReturns.csv','PreserveVariableNames',true);
     % tIn = X.Time(tr);
-    modelTrain = fitlm([dataXin dataYin] , 'linear');
+    %% Train
+    modelTrain = fitlm([dataXin dataYin] , 'linear')
+    
+    %% Predict
     retPredictionRegress = predict(modelTrain , dataXin);
     
+    %% View
     positions = zeros(size(retPredictionRegress));
     positions(retPredictionRegress > 0) = 1;
     positions(retPredictionRegress < 0) = -1;
@@ -38,32 +43,26 @@ function BA_Michael_Bielang_Regression()
     inSampleRegressionReturns = cumprod(1+actualReturns);
     
     tIn = 1:length(inSampleRegressionReturns);
-    f1 = figure('tag' , 'insamplefigure');
-    plot(tIn , inSampleRegressionReturns);
-    title('In-Sample Results');
     
     %% OUT Sample
     
-    dataXpast = readtable('matlab/testData.csv','PreserveVariableNames',true);
-    dataYpast = readtable('matlab/returns.csv','PreserveVariableNames',true);
+    testDataX = readtable('matlab/testData.csv','PreserveVariableNames',true);
+    testDataY = readtable('matlab/returns.csv','PreserveVariableNames',true);
 
-    retPred = predict(modelTrain , dataXpast);
+    retPred = predict(modelTrain , testDataX);
 
-    positions=zeros(size(dataXpast,1), 1);
+    positions=zeros(size(testDataX,1), 1);
     positions(retPred > 0)=1;
     positions(retPred < 0)=-1;
 
-    actualReturns = positions .* dataYpast{:,1};
+    actualReturns = positions .* testDataY{:,1};
     outSampleRegressionReturns = cumprod(1 + actualReturns);
 
     tOut = 1:length(outSampleRegressionReturns);
-    f2 = figure('tag' , 'outsamplefigure');
-    plot(tOut , outSampleRegressionReturns)
-    title('Out-Sample Results');
     
     %% Stepwise
     
-    modelStepwise = stepwiselm([dataXin dataYin] , 'linear' , 'upper' , 'linear');
+    modelStepwise = stepwiselm([dataXin dataYin] , 'linear' , 'upper' , 'linear')
     
     %% Predict In-Sample results
     retPrediction = predict(modelStepwise , dataXin);
@@ -74,23 +73,31 @@ function BA_Michael_Bielang_Regression()
 
     actualReturns = positions .* dataYin{:,1};
     inSampleStepwiseReturns = cumprod(1+actualReturns);
-
-    figure(f1); hold on
-    plot(tIn , inSampleStepwiseReturns , 'r');
-    legend({'Linear Regression' , 'Stepwise'});
     
     %% Run for our out of sample
-    retPred = predict(modelStepwise , dataXpast);
+    retPred = predict(modelStepwise , testDataX);
     positions=zeros(size(retPred,1), 1);
     positions(retPred > 0)=1;
     positions(retPred < 0)=-1;
 
-    actualReturns = positions .* dataYpast{:,1};
+    actualReturns = positions .* testDataY{:,1};
 
     outSampleStepwiseReturns = cumprod(1 + actualReturns);
+    
+    %% PLOT
 
-    figure(f2)
+    plot(tIn , inSampleRegressionReturns, 'b');
     hold on
+    title('In-Sample Results');
+   
+    plot(tIn, inSampleStepwiseReturns, 'r');
+    legend({'Linear Regression' , 'Stepwise'});
+    hold off
+    
+    plot(tOut , outSampleRegressionReturns, 'b')
+    hold on
+    title('Out-Sample Results');
+
     plot(tOut , outSampleStepwiseReturns , 'r')
     legend({'Linear Regression' , 'Stepwise'});
 end

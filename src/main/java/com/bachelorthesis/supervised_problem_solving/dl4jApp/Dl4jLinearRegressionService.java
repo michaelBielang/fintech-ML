@@ -3,7 +3,7 @@ package com.bachelorthesis.supervised_problem_solving.dl4jApp;
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
-import com.bachelorthesis.supervised_problem_solving.services.algos.Dl4JMatrixService;
+import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.Data;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -57,7 +57,7 @@ public class Dl4jLinearRegressionService {
         // fill matrix with predictors
 
         // xInSample
-        final INDArray factorMatrix = Dl4JMatrixService.fillMatrixWithPredictors(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        final INDArray factorMatrix = MatrixService.fillMatrixWithPredictors(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
 
         // y in Sample
         final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);

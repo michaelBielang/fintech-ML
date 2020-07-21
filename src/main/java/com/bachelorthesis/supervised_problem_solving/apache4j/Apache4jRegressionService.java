@@ -4,7 +4,7 @@ package com.bachelorthesis.supervised_problem_solving.apache4j;
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
-import com.bachelorthesis.supervised_problem_solving.services.algos.ApacheMatrixService;
+import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import org.apache.spark.SparkConf;
 import org.apache.spark.ml.feature.VectorAssembler;
@@ -52,7 +52,7 @@ public class Apache4jRegressionService {
         // y in Sample
         final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);
 
-        List<Row> rows = ApacheMatrixService.getRowList(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
         for (int i = 0; i < factorNames.size(); i++) {

@@ -38,9 +38,9 @@ public class Test {
     public void testRsi() {
         try {
             final List<ChartDataVO> pastData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(11), LocalDateTime.now().minusMonths(8), "BTC_ETH", Periods.fourHours);
+                    getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), "BTC_ETH", Periods.fourHours);
             final List<ChartDataVO> testData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(5), LocalDateTime.now().minusMonths(2), "BTC_ETH", Periods.fourHours);
+                    getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), "BTC_ETH", Periods.fourHours);
             final Matlab4Regression matlab4Regression = new Matlab4Regression();
             matlab4Regression.calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
         } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
