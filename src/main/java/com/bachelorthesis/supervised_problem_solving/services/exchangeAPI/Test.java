@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
-import com.bachelorthesis.supervised_problem_solving.matlab.Matlab4Regression;
+import com.bachelorthesis.supervised_problem_solving.frameworks.matlab.Matlab4Regression;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;

@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.dl4jApp;
+package com.bachelorthesis.supervised_problem_solving.frameworks.dl4jApp;
 
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;

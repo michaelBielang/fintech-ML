@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.dl4jApp.vo;
+package com.bachelorthesis.supervised_problem_solving.frameworks.dl4jApp.vo;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.matlab;
+package com.bachelorthesis.supervised_problem_solving.frameworks.matlab;
 
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;

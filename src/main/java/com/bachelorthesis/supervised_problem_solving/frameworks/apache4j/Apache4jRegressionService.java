@@ -1,4 +1,4 @@
-package com.bachelorthesis.supervised_problem_solving.apache4j;
+package com.bachelorthesis.supervised_problem_solving.frameworks.apache4j;
 
 
 import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataStorage;
