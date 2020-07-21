@@ -28,15 +28,10 @@ public class Dl4jLinearRegressionService {
 
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
 
-    private final int tradingFrequency = 60;
-
-/*
-    // delta between bars
-    private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
-*/
+    private final static int TRADING_FREQUENCY = 60;
 
     // delta between bars
-    private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
+    private final static int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     /**
      * price - timetable of prices. I MAKE THE ASSUMPTION THAT THIS VARIABLE
@@ -49,27 +44,19 @@ public class Dl4jLinearRegressionService {
      */
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) {
 
-        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, barDelta, tradingFrequency);
+        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, BAR_DELTA, TRADING_FREQUENCY);
         validateNumberOfDataPoints(chartDataVOList);
 
-        final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
-
-        // fill matrix with predictors
+        final List<String> factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
 
         // xInSample
-        final INDArray factorMatrix = MatrixService.fillMatrixWithPredictors(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        final INDArray factorMatrix = MatrixService.fillMatrixWithPredictors(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
 
         // y in Sample
-        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);
+        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, TRADING_FREQUENCY);
         INDArray indArray = Nd4j.create(futureReturns);
-        // train linear regression model --> modelTrain = fitlm([XInSample yInSample] , 'linear')
 
-        LinearSolve linearSolve = new LinearSolve(factorMatrix, indArray);
-        System.out.println(linearSolve.getInputArgument(0).rows());
-        //train(factorMatrix, futureReturns);
-
-        System.out.println(factorNames);
-        System.out.println(factorMatrix);
+        final LinearSolve linearSolve = new LinearSolve(factorMatrix, indArray);
     }
 
     private void validateNumberOfDataPoints(List<ChartDataVO> chartDataVOList) {
@@ -79,33 +66,20 @@ public class Dl4jLinearRegressionService {
     }
 
     private void train(INDArray factorMatrix, List<Double> futureReturns) {
-        int seed = 123;
-        double learningRate = 0.01;
-        int batchSize = 50;
-        int nEpochs = 30;
+        final int numInputs = factorMatrix.columns();
+        final int numOutputs = 1;
 
-        int numInputs = factorMatrix.columns();
-        int numOutputs = 1;
-        int numHiddenNodes = 20;
+        final MultiLayerConfiguration conf = getMultiLayerConfiguration(numInputs);
+        final MultiLayerNetwork model = new MultiLayerNetwork(conf);
 
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .seed(seed)
-                .weightInit(XAVIER)
-                .updater(new Nesterovs(learningRate, 0.9))
-                .list()
-                .layer(new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
-                        .activation(Activation.RELU)
-                        .build())
-                .build();
-
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
         model.setListeners(new ScoreIterationListener(10));  //Print score every 10 parameter updates
-
         model.fit(factorMatrix, new int[]{numInputs});
 
         System.out.println("Evaluate model....");
-        Evaluation eval = new Evaluation(numOutputs);
+        final Evaluation eval = new Evaluation(numOutputs);
+
+        // TODO: 21.07.2020 implement
 /*        while (testIter.hasNext()) {
             DataSet t = testIter.next();
             INDArray features = t.getFeatures();
@@ -124,6 +98,19 @@ public class Dl4jLinearRegressionService {
         generateVisuals(model, trainIter, testIter);*/
     }
 
-    // TODO: 16.07.2020 create linear regression model
-    // train model
+    private MultiLayerConfiguration getMultiLayerConfiguration(int numInputs) {
+        final int seed = 123;
+        final double learningRate = 0.01;
+        final int numHiddenNodes = 20;
+
+        return new NeuralNetConfiguration.Builder()
+                .seed(seed)
+                .weightInit(XAVIER)
+                .updater(new Nesterovs(learningRate, 0.9))
+                .list()
+                .layer(new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
+                        .activation(Activation.RELU)
+                        .build())
+                .build();
+    }
 }

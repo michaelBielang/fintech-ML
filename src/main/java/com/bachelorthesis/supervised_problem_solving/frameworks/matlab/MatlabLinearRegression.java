@@ -95,7 +95,7 @@ public class MatlabLinearRegression {
         saveDataToCSV(futureReturnsDataSet, "futureReturns", true);
     }
 
-    public void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
+    private void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
 
         // create proxy
         final MatlabProxyFactoryOptions.Builder builder = new MatlabProxyFactoryOptions.Builder();

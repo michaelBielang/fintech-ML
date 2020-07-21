@@ -28,20 +28,20 @@ public class Apache4jRegressionService {
 
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
 
-    private final int tradingFrequency = 60;
+    private final static int TRADING_FREQUENCY = 60;
 
     // delta between bars
-    private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
+    private final static int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) {
 
         initMatrixSetup(chartDataVOList, technicalIndicatorsList);
 
-        final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
+        final List<String> factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
         final SparkSession spark = getSparkSession();
 
         // y in Sample
-        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);
+        final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, TRADING_FREQUENCY);
 
         final Dataset<Row> dataSet = createMatrix(chartDataVOList, technicalIndicatorsList, factorNames, spark);
 
@@ -60,12 +60,12 @@ public class Apache4jRegressionService {
     }
 
     private void initMatrixSetup(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList) {
-        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, barDelta, tradingFrequency);
+        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, BAR_DELTA, TRADING_FREQUENCY);
         validateNumberOfDataPoints(chartDataVOList);
     }
 
     private Dataset<Row> createMatrix(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames, SparkSession spark) {
-        final List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        final List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
         for (int i = 0; i < factorNames.size(); i++) {
@@ -83,7 +83,7 @@ public class Apache4jRegressionService {
     }
 
     private SparkSession getSparkSession() {
-        SparkConf sparkConf = new SparkConf();
+        final SparkConf sparkConf = new SparkConf();
         sparkConf.setMaster("local[2]");
         sparkConf.setAppName("MLA");
         return SparkSession.builder().config(sparkConf).getOrCreate();
