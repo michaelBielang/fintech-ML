@@ -13,5 +13,6 @@ public class SupervisedProblemSolvingApplication {
 
         final MatlabLinearRegression matlabLinearRegression = applicationContext.getBean(MatlabLinearRegression.class);
         matlabLinearRegression.startMatlabLinearRegressionExperiment();
+        SpringApplication.exit(applicationContext);
     }
 }

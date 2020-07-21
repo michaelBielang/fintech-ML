@@ -1,13 +1,9 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
-import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
-import com.bachelorthesis.supervised_problem_solving.frameworks.matlab.MatlabLinearRegression;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import com.bachelorthesis.supervised_problem_solving.storage.Storage;
-import matlabcontrol.MatlabConnectionException;
-import matlabcontrol.MatlabInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,19 +27,6 @@ public class Test {
             storage.saveChartDate(chartDataVOS);
             System.out.println("SAVED");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void testRsi() {
-        try {
-            final List<ChartDataVO> pastData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), "BTC_ETH", Periods.fourHours);
-            final List<ChartDataVO> testData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), "BTC_ETH", Periods.fourHours);
-            final MatlabLinearRegression matlabLinearRegression = new MatlabLinearRegression();
-            matlabLinearRegression.calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
-        } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
             e.printStackTrace();
         }
     }
