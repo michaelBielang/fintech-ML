@@ -60,5 +60,38 @@ function BA_Michael_Bielang_Regression()
     f2 = figure('tag' , 'outsamplefigure');
     plot(tOut , outSampleRegressionReturns)
     title('Out-Sample Results');
+    
+    %% Stepwise
+    
+    modelStepwise = stepwiselm([dataXin dataYin] , 'linear' , 'upper' , 'linear');
+    
+    %% Predict In-Sample results
+    retPrediction = predict(modelStepwise , dataXin);
+
+    positions = zeros(size(retPrediction));
+    positions(retPrediction > 0) = 1;
+    positions(retPrediction < 0) = -1;
+
+    actualReturns = positions .* dataYin{:,1};
+    inSampleStepwiseReturns = cumprod(1+actualReturns);
+
+    figure(f1); hold on
+    plot(tIn , inSampleStepwiseReturns , 'r');
+    legend({'Linear Regression' , 'Stepwise'});
+    
+    %% Run for our out of sample
+    retPred = predict(modelStepwise , dataXpast);
+    positions=zeros(size(retPred,1), 1);
+    positions(retPred > 0)=1;
+    positions(retPred < 0)=-1;
+
+    actualReturns = positions .* dataYpast{:,1};
+
+    outSampleStepwiseReturns = cumprod(1 + actualReturns);
+
+    figure(f2)
+    hold on
+    plot(tOut , outSampleStepwiseReturns , 'r')
+    legend({'Linear Regression' , 'Stepwise'});
 end
 

@@ -21,24 +21,30 @@ public class Dl4JMatrixService {
 
     private static void fillMatrixWithResults(List<String> factorNames, final List<Indicators> technicalIndicatorsList,
                                               INDArray factorMatrix, final List<ChartDataVO> chartDataVOList, int[] barDeltas) {
-
-        final int expectedRows = RuntimeDataStorage.getMatrixRowLength();
         for (int index = 0; index < factorNames.size(); index++) {
 
+            //returns
             if (index < barDeltas.length) {
-
-                List<Double> returns = Algorithms.getReturns(chartDataVOList, barDeltas[index]);
-
-                final INDArray indArray = Nd4j.create(returns);
-
-                factorMatrix.getColumn(index).addi(indArray);
+                addReturnsToMatrix(factorMatrix.getColumn(index), Algorithms.getReturns(chartDataVOList, barDeltas[index]));
             } else {
                 final List<List<Double>> indicatorValues = Algorithms.getIndicatorValues(chartDataVOList, technicalIndicatorsList);
-                final INDArray indArray = Nd4j.create(indicatorValues.get(index - barDeltas.length));
+                int innerIndex = index;
 
-                factorMatrix.getColumn(index).addi(indArray);
+                for (List<Double> indicatorValue : indicatorValues) {
+                    final INDArray indArray = Nd4j.create(indicatorValue);
+                    factorMatrix.getColumn(innerIndex++).addi(indArray);
+                }
+                break;
             }
         }
+    }
+
+    private static void addReturnsToMatrix(INDArray column, List<Double> returns1) {
+        List<Double> returns = returns1;
+
+        final INDArray indArray = Nd4j.create(returns);
+
+        column.addi(indArray);
     }
 
     private static INDArray createEmptyFactorMatrix(List<String> factorNames) {

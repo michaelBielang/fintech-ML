@@ -101,8 +101,10 @@ public class Algorithms {
                 case RSI:
                     FactorNames.getIndicatorDeltas(indicator)
                             .forEach(delta -> technicalIndicatorResults.add(Algorithms.getRsi(chartDataVOList, delta)));
+                    break;
                 case MACD:
                     technicalIndicatorResults.add(Algorithms.getMac(chartDataVOList));
+                    break;
             }
         }
         return technicalIndicatorResults;
