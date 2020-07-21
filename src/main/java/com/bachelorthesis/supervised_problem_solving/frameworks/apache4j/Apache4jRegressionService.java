@@ -16,43 +16,56 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getFactorNames;
 import static org.apache.spark.sql.api.r.SQLUtils.createStructField;
 
+@Service
 public class Apache4jRegressionService {
 
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
 
     private final int tradingFrequency = 60;
 
-/*
-    // delta between bars
-    private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
-*/
-
     // delta between bars
     private final int[] barDelta = new int[]{5, 10, 15, 20, 25, 30, 60};
 
     public void calculateSignals(final List<ChartDataVO> chartDataVOList, final List<Indicators> technicalIndicatorsList) {
 
-        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, barDelta, tradingFrequency);
-        validateNumberOfDataPoints(chartDataVOList);
+        initMatrixSetup(chartDataVOList, technicalIndicatorsList);
 
         final List<String> factorNames = getFactorNames(technicalIndicatorsList, barDelta);
-        SparkConf sparkConf = new SparkConf();
-        sparkConf.setMaster("local[2]");
-        sparkConf.setAppName("MLA");
-        SparkSession spark = SparkSession.builder().config(sparkConf).getOrCreate();
-
-        // fill matrix with predictors
+        final SparkSession spark = getSparkSession();
 
         // y in Sample
         final List<Double> futureReturns = Algorithms.getReturns(chartDataVOList, tradingFrequency);
 
-        List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
+        final Dataset<Row> dataSet = createMatrix(chartDataVOList, technicalIndicatorsList, factorNames, spark);
+
+        final VectorAssembler assembler = new VectorAssembler()
+                .setInputCols(factorNames.toArray(String[]::new))
+                .setOutputCol("futureReturns");
+
+        final LinearRegression lr = new LinearRegression()
+                .setMaxIter(10)
+                .setRegParam(0.3)
+                .setElasticNetParam(0.8);
+
+        final Dataset<Double> doubleDataset = spark.createDataset(futureReturns, Encoders.DOUBLE());
+
+        final LinearRegression linearRegression = new LinearRegression();
+    }
+
+    private void initMatrixSetup(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList) {
+        runtimeDatastorage.findAndSetMaximumMatrixRows(chartDataVOList, technicalIndicatorsList, barDelta, tradingFrequency);
+        validateNumberOfDataPoints(chartDataVOList);
+    }
+
+    private Dataset<Row> createMatrix(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames, SparkSession spark) {
+        final List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, barDelta, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
         for (int i = 0; i < factorNames.size(); i++) {
@@ -61,24 +74,19 @@ public class Apache4jRegressionService {
 
         final StructType schemata = DataTypes.createStructType(structFields);
 
-        VectorAssembler assembler = new VectorAssembler()
-                .setInputCols(factorNames.toArray(String[]::new))
-                .setOutputCol("futureReturns");
+        final Dataset<Row> dataSet = spark.createDataFrame(rows, schemata);
+        return dataSet;
+    }
 
-        LinearRegression lr = new LinearRegression()
-                .setMaxIter(10)
-                .setRegParam(0.3)
-                .setElasticNetParam(0.8);
-        Dataset<Row> dataSet = spark.createDataFrame(rows, schemata);
-        dataSet.show();
+    private Dataset<Row> addColumnToMatrix(Dataset<Row> dataSet, Dataset<Double> doubleDataset) {
+        return dataSet.join(doubleDataset).withColumnRenamed("value", "futureReturns");
+    }
 
-        Dataset<Double> doubleDataset = spark.createDataset(futureReturns, Encoders.DOUBLE());
-
-        dataSet = dataSet.join(doubleDataset).withColumnRenamed("value", "futureReturns");
-        System.out.println(dataSet);
-        LinearRegression linearRegression = new LinearRegression();
-
-
+    private SparkSession getSparkSession() {
+        SparkConf sparkConf = new SparkConf();
+        sparkConf.setMaster("local[2]");
+        sparkConf.setAppName("MLA");
+        return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
     private void validateNumberOfDataPoints(List<ChartDataVO> chartDataVOList) {

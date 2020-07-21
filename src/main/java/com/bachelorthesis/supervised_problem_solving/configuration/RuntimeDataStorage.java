@@ -9,7 +9,6 @@ import java.util.List;
 
 public class RuntimeDataStorage {
 
-
     private static int matrixRowLength;
 
     public void findAndSetMaximumMatrixRows(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, int[] barDeltas,

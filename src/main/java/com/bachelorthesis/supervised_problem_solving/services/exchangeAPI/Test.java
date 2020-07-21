@@ -1,7 +1,7 @@
 package com.bachelorthesis.supervised_problem_solving.services.exchangeAPI;
 
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
-import com.bachelorthesis.supervised_problem_solving.frameworks.matlab.Matlab4Regression;
+import com.bachelorthesis.supervised_problem_solving.frameworks.matlab.MatlabLinearRegression;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
@@ -41,8 +41,8 @@ public class Test {
                     getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), "BTC_ETH", Periods.fourHours);
             final List<ChartDataVO> testData = poloniexApiService.
                     getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), "BTC_ETH", Periods.fourHours);
-            final Matlab4Regression matlab4Regression = new Matlab4Regression();
-            matlab4Regression.calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
+            final MatlabLinearRegression matlabLinearRegression = new MatlabLinearRegression();
+            matlabLinearRegression.calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
         } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
             e.printStackTrace();
         }

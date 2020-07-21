@@ -4,6 +4,8 @@ import com.bachelorthesis.supervised_problem_solving.configuration.RuntimeDataSt
 import com.bachelorthesis.supervised_problem_solving.enums.Indicators;
 import com.bachelorthesis.supervised_problem_solving.services.algos.Algorithms;
 import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixService;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
+import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
 import lombok.val;
 import matlabcontrol.*;
@@ -17,29 +19,45 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import scala.collection.mutable.StringBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bachelorthesis.supervised_problem_solving.services.algos.FactorNames.getFactorNames;
 import static org.apache.spark.sql.api.r.SQLUtils.createStructField;
 
-public class Matlab4Regression {
-
-    private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
+@Service
+public class MatlabLinearRegression {
 
     private static final int TRADING_FREQUENCY = 60;
-
-    private SparkSession sparkSession;
-
-    private List<String> factorNames;
-
     // delta between bars
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
+    private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
 
-    public void calculateSignals(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
+    @Autowired
+    private PoloniexApiService poloniexApiService;
+    private SparkSession sparkSession;
+    private List<String> factorNames;
+
+    public void startMatlabLinearRegressionExperiment() {
+        final String currency = "BTC_ETH";
+        try {
+            final List<ChartDataVO> pastData = poloniexApiService.
+                    getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), currency, Periods.fourHours);
+            final List<ChartDataVO> testData = poloniexApiService.
+                    getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), currency, Periods.fourHours);
+            calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
+        } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void calculateSignals(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
 
         factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
         this.sparkSession = setupSpark();
@@ -50,7 +68,6 @@ public class Matlab4Regression {
         createTestData(testData, technicalIndicatorsList);
 
         runMatlab();
-        return;
     }
 
     private void createTestData(List<ChartDataVO> testData, List<Indicators> technicalIndicatorsList) throws IOException {
@@ -81,11 +98,11 @@ public class Matlab4Regression {
     public void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
 
         // create proxy
-        MatlabProxyFactoryOptions.Builder builder = new MatlabProxyFactoryOptions.Builder();
+        final MatlabProxyFactoryOptions.Builder builder = new MatlabProxyFactoryOptions.Builder();
 
-        MatlabProxyFactory factory = new MatlabProxyFactory(builder.build());
+        final MatlabProxyFactory factory = new MatlabProxyFactory(builder.build());
         // get the proxy
-        MatlabProxy proxy = factory.getProxy();
+        final MatlabProxy proxy = factory.getProxy();
 
         // call user-defined function (must be on the path)
         proxy.eval("addpath('" + getPath().toString() + "')");
@@ -102,7 +119,7 @@ public class Matlab4Regression {
     }
 
     private Dataset<Row> getIndicatorDataSet(List<ChartDataVO> chartDataVOList, List<Indicators> technicalIndicatorsList, List<String> factorNames) {
-        List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
+        final List<Row> rows = MatrixService.getRowList(chartDataVOList, factorNames, BAR_DELTA, technicalIndicatorsList);
         final StructField[] structFields = new StructField[factorNames.size()];
 
         for (int i = 0; i < factorNames.size(); i++) {
