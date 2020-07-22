@@ -6,66 +6,82 @@
 
 function BA_Michael_Bielang_Regression()
 
-    %% IN SAMPLE
+    %% Train data with training data
 
     dataXin = readtable('matlab/trainingData.csv','PreserveVariableNames',true);
     dataYin = readtable('matlab/futureReturns.csv','PreserveVariableNames',true);
     % tIn = X.Time(tr);
+
     %% Train
+    % I am using the inbuilt function fitlm to create a linear regression model
     fitLmModel = fitlm([dataXin dataYin] , 'linear')
 
-    %% Predict
+    %% Predict with the fitLmModel
     linearRegPredictor = predict(fitLmModel , dataXin);
 
-    %% View
+    % Analyze the prediction by collecting the virtual profits
     positions = zeros(size(linearRegPredictor));
+
+    % if the predictor is > 0 we virtually buy
     positions(linearRegPredictor > 0) = 1;
+
+    % if the predictor is < 0 we virtually sell
     positions(linearRegPredictor < 0) = -1;
 
-    actualReturns = positions .* dataYin{:,1};
-    inSampleRegressionReturns = cumprod(1+actualReturns);
+    % aggregate profits/losses
+    virtualProfits = positions .* dataYin{:,1};
+
+    % store profit/loss to plot it later
+    inSampleRegressionReturns = cumprod(1+virtualProfits);
 
     tIn = 1:length(inSampleRegressionReturns);
 
-    %% OUT Sample
+    %% Test the model with test data
 
     testDataX = readtable('matlab/testData.csv','PreserveVariableNames',true);
     testDataY = readtable('matlab/returns.csv','PreserveVariableNames',true);
 
+    % I create a new predictor based on the past model and fed with the test data
     testDataPredictor = predict(fitLmModel , testDataX);
 
     positions=zeros(size(testDataX,1), 1);
     positions(testDataPredictor > 0)=1;
     positions(testDataPredictor < 0)=-1;
 
-    actualReturns = positions .* testDataY{:,1};
-    outSampleRegressionReturns = cumprod(1 + actualReturns);
+    virtualProfits = positions .* testDataY{:,1};
+
+    % store profit/loss to plot it later
+    outSampleRegressionReturns = cumprod(1 + virtualProfits);
 
     tOut = 1:length(outSampleRegressionReturns);
 
-    %% Stepwise
+    %% Stepwise lm function with the same procedure as applied above
 
+    % I create a stepwise model
     modelStepwise = stepwiselm([dataXin dataYin] , 'linear' , 'upper' , 'linear')
 
-    %% Predict In-Sample results
+    % Predict with the stepwise model
     testDataPredictor = predict(modelStepwise , dataXin);
 
     positions = zeros(size(testDataPredictor));
     positions(testDataPredictor > 0) = 1;
     positions(testDataPredictor < 0) = -1;
 
-    actualReturns = positions .* dataYin{:,1};
-    inSampleStepwiseReturns = cumprod(1+actualReturns);
+    virtualProfits = positions .* dataYin{:,1};
 
-    %% Run for our out of sample
+    % Storing the profits here
+    inSampleStepwiseReturns = cumprod(1+virtualProfits);
+
+    % Run for our out of sample
     testDataPredictor = predict(modelStepwise , testDataX);
     positions=zeros(size(testDataPredictor,1), 1);
     positions(testDataPredictor > 0)=1;
     positions(testDataPredictor < 0)=-1;
 
-    actualReturns = positions .* testDataY{:,1};
+    virtualProfits = positions .* testDataY{:,1};
 
-    outSampleStepwiseReturns = cumprod(1 + actualReturns);
+    % Storing profit/loss to plot it later
+    outSampleStepwiseReturns = cumprod(1 + virtualProfits);
 
     %% PLOT
 
