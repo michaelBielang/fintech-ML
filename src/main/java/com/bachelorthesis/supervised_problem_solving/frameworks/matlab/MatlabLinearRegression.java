@@ -87,13 +87,14 @@ public class MatlabLinearRegression {
         final List<Double> futureReturns = Algorithms.getReturns(pastData, TRADING_FREQUENCY);
 
         final Dataset<Row> indicatorDataSet = getIndicatorDataSet(pastData, technicalIndicatorsList, factorNames);
-        indicatorDataSet.show();
+
         saveDataToCSV(indicatorDataSet, "trainingData", true);
         //saveDataToCSV(indicatorDataSet, "fullTable", true); not yet necessary
 
         final Dataset<Double> futureReturnsDataSet = sparkSession.createDataset(futureReturns, Encoders.DOUBLE());
         saveDataToCSV(futureReturnsDataSet, "futureReturns", true);
     }
+
 
     private void runMatlab() throws MatlabConnectionException, MatlabInvocationException {
 
@@ -105,6 +106,7 @@ public class MatlabLinearRegression {
         final MatlabProxy proxy = factory.getProxy();
 
         // call user-defined function (must be on the path)
+        System.out.println("PATH #########: " + getPath().toString());
         proxy.eval("addpath('" + getPath().toString() + "')");
         proxy.feval("BA_Michael_Bielang_Regression");
 
@@ -114,7 +116,7 @@ public class MatlabLinearRegression {
 
     private StringBuilder getPath() {
         final StringBuilder path = new StringBuilder(System.getProperty("user.dir").replace("\\", "\\\\"));
-        path.append("\\matlab");
+        path.append("\\\\matlab");
         return path;
     }
 

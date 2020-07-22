@@ -2,7 +2,7 @@
 % This app runs a regression on pre-prepared data delivered by my Java Spring Application.
 %
 % First I make us of a Linear Regression and then of a Stepwise Regression.
-%
+
 
 function BA_Michael_Bielang_Regression()
 
@@ -10,9 +10,7 @@ function BA_Michael_Bielang_Regression()
 
     dataXin = readtable('matlab/trainingData.csv','PreserveVariableNames',true);
     dataYin = readtable('matlab/futureReturns.csv','PreserveVariableNames',true);
-    % tIn = X.Time(tr);
 
-    %% Train
     % I am using the inbuilt function fitlm to create a linear regression model
     fitLmModel = fitlm([dataXin dataYin] , 'linear')
 
@@ -55,7 +53,7 @@ function BA_Michael_Bielang_Regression()
 
     tOut = 1:length(outSampleRegressionReturns);
 
-    %% Stepwise lm function with the same procedure as applied above
+    %% Train with a stepwise linear model with the same procedure as applied above
 
     % I create a stepwise model
     modelStepwise = stepwiselm([dataXin dataYin] , 'linear' , 'upper' , 'linear')

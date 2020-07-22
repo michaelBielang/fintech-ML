@@ -7,19 +7,20 @@ This project ist part of my bachelor thesis with the title "Execution and analys
 ### Features
 
  * [x] Fetching chart data from crypto exchange (www.poloniex.com)
- * [x] Make use of trading indicators (MACD and RSI) *Demo-mode
- * [x] Prepare data for in app communication with Matlab
+ * [x] Make use of trading indicators  (Demo-mode uses MACD and RSI)
+ * [x] Prepare and store data for in-app communication with Matlab
  * [x] Fully functional Matlab implementation for linear and stepwise regression analyse, prediction and backtesting
  * [x] Building and maintaining data structures via liquibase
  * [x] Embedded & fast H2 DB
  * [x] Test Coverage
  * [x] Support of more than 130 technical indicators (Aroon, ATR, moving averages, parabolic SAR, RSI, etc.)
  * [x] Utilities to run and compare strategies
- * [x] Started: Support of Apache-Spark, DeepLearning4j
+ * [x] API support of Matlab, Apache-Spark and DeepLearning4j
  
 ### Todos
 
  - Further implementation of Apache Spark Neural Networks
+ - Implement ML with Matlab
  - Implement an UI (React support already present)
  
 ### Setup
