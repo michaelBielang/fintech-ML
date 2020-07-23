@@ -19,6 +19,8 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.collection.mutable.StringBuilder;
@@ -38,31 +40,30 @@ public class MatlabLinearRegression {
     // delta between bars
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
+    private final static Logger LOGGER = LoggerFactory.getLogger(MatlabLinearRegression.class);
 
     @Autowired
     private PoloniexApiService poloniexApiService;
     private SparkSession sparkSession;
     private List<String> factorNames;
 
-    public void startMatlabLinearRegressionExperiment() {
+    public void startMatlabRegressionExperiment() {
         final String currency = "BTC_ETH";
+        this.sparkSession = setupSpark();
         try {
             final List<ChartDataVO> pastData = poloniexApiService.
                     getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), currency, Periods.fourHours);
             final List<ChartDataVO> testData = poloniexApiService.
                     getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), currency, Periods.fourHours);
+
             calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
-        } catch (IOException | InterruptedException | MatlabConnectionException | MatlabInvocationException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            LOGGER.error("Error fetching and execute trade signals for {}, with exception {}", this, exception);
         }
     }
 
     private void calculateSignals(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
-
         factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
-        this.sparkSession = setupSpark();
-
-        // y in Sample
 
         createPastData(pastData, technicalIndicatorsList);
         createTestData(testData, technicalIndicatorsList);
