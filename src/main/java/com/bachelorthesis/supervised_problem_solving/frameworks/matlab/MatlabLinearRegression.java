@@ -39,10 +39,9 @@ public class MatlabLinearRegression {
     private static final int TRADING_FREQUENCY = 60;
     // delta between bars
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
-    private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
     private final static Logger LOGGER = LoggerFactory.getLogger(MatlabLinearRegression.class);
     private final static String DEMO_CURRENCY = "BTC_XMR";
-
+    private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
     @Autowired
     private PoloniexApiService poloniexApiService;
     private SparkSession sparkSession;
