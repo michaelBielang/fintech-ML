@@ -7,7 +7,6 @@ import com.bachelorthesis.supervised_problem_solving.services.algos.MatrixServic
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.PoloniexApiService;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.enums.Periods;
 import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloniex.vo.ChartDataVO;
-import lombok.val;
 import matlabcontrol.*;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -87,7 +86,6 @@ public class MatlabLinearRegression {
         final List<Double> futureReturns = Algorithms.getReturns(pastData, TRADING_FREQUENCY);
 
         final Dataset<Row> indicatorDataSet = getIndicatorDataSet(pastData, technicalIndicatorsList, factorNames);
-        indicatorDataSet.show();
 
         saveDataToCSV(indicatorDataSet, "trainingData", true);
         //saveDataToCSV(indicatorDataSet, "fullTable", true); not yet necessary
@@ -134,9 +132,10 @@ public class MatlabLinearRegression {
     }
 
     private SparkSession setupSpark() {
-        SparkConf sparkConf = new SparkConf();
+        final SparkConf sparkConf = new SparkConf();
         sparkConf.setMaster("local[2]");
         sparkConf.setAppName("MLA");
+
         return SparkSession.builder().config(sparkConf).getOrCreate();
     }
 
@@ -152,11 +151,13 @@ public class MatlabLinearRegression {
                 format("com.databricks.spark.csv").
                 option("header", String.valueOf(withHeader)).
                 save("tmp.csv");
-        val fs = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
-        File dir = new File(System.getProperty("user.dir") + "/tmp.csv/");
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".csv"));
-        fs.rename(new Path(files[0].toURI()), new Path(System.getProperty("user.dir") + "/matlab/" + dataType + ".csv"));
-        fs.delete(new Path(System.getProperty("user.dir") + "/tmp.csv/"), true);
+
+        final FileSystem fileSystem = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration());
+        final File dir = new File(System.getProperty("user.dir") + "/tmp.csv/");
+        final File[] files = dir.listFiles((d, name) -> name.endsWith(".csv"));
+
+        fileSystem.rename(new Path(files[0].toURI()), new Path(System.getProperty("user.dir") + "/matlab/" + dataType + ".csv"));
+        fileSystem.delete(new Path(System.getProperty("user.dir") + "/tmp.csv/"), true);
     }
 
     private void validateNumberOfDataPoints(List<ChartDataVO> chartDataVOList) {
