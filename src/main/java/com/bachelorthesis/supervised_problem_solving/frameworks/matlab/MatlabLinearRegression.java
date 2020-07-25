@@ -41,6 +41,7 @@ public class MatlabLinearRegression {
     private static final int[] BAR_DELTA = new int[]{5, 10, 15, 20, 25, 30, 60};
     private final RuntimeDataStorage runtimeDatastorage = new RuntimeDataStorage();
     private final static Logger LOGGER = LoggerFactory.getLogger(MatlabLinearRegression.class);
+    private final static String DEMO_CURRENCY = "BTC_XMR";
 
     @Autowired
     private PoloniexApiService poloniexApiService;
@@ -48,27 +49,25 @@ public class MatlabLinearRegression {
     private List<String> factorNames;
 
     public void startMatlabRegressionExperiment() {
-        final String currency = "BTC_ETH";
         this.sparkSession = setupSpark();
         try {
             final List<ChartDataVO> pastData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(12), LocalDateTime.now().minusMonths(8), currency, Periods.fourHours);
+                    getChartData(LocalDateTime.now().minusMonths(18), LocalDateTime.now().minusMonths(10), DEMO_CURRENCY, Periods.fourHours);
             final List<ChartDataVO> testData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(6), LocalDateTime.now().minusMonths(2), currency, Periods.fourHours);
+                    getChartData(LocalDateTime.now().minusMonths(10), LocalDateTime.now().minusMonths(2), DEMO_CURRENCY, Periods.fourHours);
 
-            calculateSignals(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
+            setupVectorMatrices(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
+            runMatlab();
         } catch (Exception exception) {
             LOGGER.error("Error fetching and execute trade signals for {}, with exception {}", this, exception);
         }
     }
 
-    private void calculateSignals(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, InterruptedException, MatlabInvocationException, MatlabConnectionException {
+    private void setupVectorMatrices(final List<ChartDataVO> pastData, List<ChartDataVO> testData, final List<Indicators> technicalIndicatorsList) throws IOException, MatlabInvocationException, MatlabConnectionException {
         factorNames = getFactorNames(technicalIndicatorsList, BAR_DELTA);
 
         createPastData(pastData, technicalIndicatorsList);
         createTestData(testData, technicalIndicatorsList);
-
-        runMatlab();
     }
 
     private void createTestData(List<ChartDataVO> testData, List<Indicators> technicalIndicatorsList) throws IOException {
