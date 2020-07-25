@@ -50,11 +50,12 @@ public class MatlabLinearRegression {
 
     public void startMatlabRegressionExperiment() {
         this.sparkSession = setupSpark();
+        final LocalDateTime now = LocalDateTime.now();
         try {
             final List<ChartDataVO> pastData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(18), LocalDateTime.now().minusMonths(10), DEMO_CURRENCY, Periods.fourHours);
+                    getChartData(now.minusMonths(18), now.minusMonths(10), DEMO_CURRENCY, Periods.fourHours);
             final List<ChartDataVO> testData = poloniexApiService.
-                    getChartData(LocalDateTime.now().minusMonths(10), LocalDateTime.now().minusMonths(2), DEMO_CURRENCY, Periods.fourHours);
+                    getChartData(now.minusMonths(10), now.minusMonths(2), DEMO_CURRENCY, Periods.fourHours);
 
             setupVectorMatrices(pastData, testData, List.of(Indicators.RSI, Indicators.MACD));
             runMatlab();
