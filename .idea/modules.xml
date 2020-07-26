@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/supervised_problem_solving.iml" filepath="$PROJECT_DIR$/supervised_problem_solving.iml" />
+      <module fileurl="file://$PROJECT_DIR$/algorithmic_trading.iml" filepath="$PROJECT_DIR$/algorithmic_trading.iml" />
     </modules>
   </component>
 </project>

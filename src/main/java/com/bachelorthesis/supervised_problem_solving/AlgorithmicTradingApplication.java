@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class SupervisedProblemSolvingApplication {
+public class AlgorithmicTradingApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(SupervisedProblemSolvingApplication.class, args);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(AlgorithmicTradingApplication.class, args);
 
         final MatlabLinearRegression matlabLinearRegression = applicationContext.getBean(MatlabLinearRegression.class);
         matlabLinearRegression.startMatlabRegressionExperiment();

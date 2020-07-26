@@ -7,16 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="supervised_problem_solving" />
+        <module name="algorithmic_trading" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="supervised_problem_solving" target="13" />
+      <module name="algorithmic_trading" target="13" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="supervised_problem_solving" options="-parameters" />
+      <module name="algorithmic_trading" options="-parameters" />
     </option>
   </component>
 </project>
