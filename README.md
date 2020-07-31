@@ -1,6 +1,7 @@
 ## Introduction
 
-This project ist part of my bachelor thesis with the title "Execution and analyse of finance transaction done by algorithms" *[translated]
+This project ist part of my bachelor thesis with the title "Execution and analysis of finance transactions done by algorithms"
+
 
 ## App 
 
@@ -28,12 +29,38 @@ This project ist part of my bachelor thesis with the title "Execution and analys
 To use this demo it is required to have the following software installed
 
   - Java 14+
-  - Apache-Hadtoop
+  - Apache-Hadoop
   - Matlab R2020a
+  
+Moreover, Matlab requires to have these plugins installed:
 
-This app was tested on a Windows 10 machine only.
+  - Financial Instruments Toolbox
+  - Trading Toolbox
+  - Symbolic Math Toolbox
+  - Statistics and Machine Learning Toolbox
+  - Simulink  
+  - Optimization Toolbox
+  - Financial Toolbox
 
-To setup Hadtoop on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions:
+This app was tested on a Windows 10 machine.
+
+To set up Hadoop on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions.
+
+Clone this program and import it with an IDE your choice. (I use IntelliJ IDEA 2020.2)
+
+If your maven configuration does not import the dependencies please do so manually. 
+
+To verify a proper setup please execute the verify lifecycle in maven. 
+It should state `BUILD SUCCESS`
+
+To finally execute this application execute the main function within the `AlgorithmicTradingApplication.class`
+
+## Technology Stack
+
+### UI
+
++ React (dependencies, internal app routing and basic layout)
++ MATLAB plot
 
 ### Maven dependencies
 
@@ -165,4 +192,3 @@ To setup Hadtoop on Windows 10 please follow [these](https://towardsdatascience.
             <version>0.13</version>
         </dependency>
 ```
-

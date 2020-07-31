@@ -12,7 +12,9 @@ public class AlgorithmicTradingApplication {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(AlgorithmicTradingApplication.class, args);
 
         final MatlabLinearRegression matlabLinearRegression = applicationContext.getBean(MatlabLinearRegression.class);
+
         matlabLinearRegression.startMatlabRegressionExperiment();
+
         SpringApplication.exit(applicationContext);
     }
 }
