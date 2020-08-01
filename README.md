@@ -46,7 +46,7 @@ Moreover, MATLAB requires to have these plugins installed:
 
 This app was tested on a Windows 10 machine.
 
-To set up **Hadoop** on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions.
+To set up **Hadoop** on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions till step 3. You can skip from step 4!
 
 **Clone** this repository and import it to an IDE of your choice. (I use IntelliJ IDEA 2020.2)
 
