@@ -1,11 +1,13 @@
-## Introduction
+# Introduction
 
-This project ist part of my bachelor thesis with the title "Execution and analysis of finance transactions done by algorithms"
+This repository is part of my bachelor thesis "Execution and analysis of finance transactions done by algorithms" under supervision of Prof. Dr. Christian Märtin, University of Applied Sciences Augsburg, Germany.
 
 
 ## App 
 
-### Features
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)]()
+
+## Features
 
  * [x] Fetching chart data from crypto exchange (www.poloniex.com)
  * [x] Make use of trading indicators  (Demo-mode uses MACD and RSI)
@@ -18,13 +20,13 @@ This project ist part of my bachelor thesis with the title "Execution and analys
  * [x] Utilities to run and compare strategies
  * [x] API support of Matlab, Apache-Spark and DeepLearning4j
  
-### Todos
+## Todos
 
  - Further implementation of Apache Spark Neural Networks
  - Implement ML with Matlab
  - Implement an UI (React support already present)
  
-### Setup
+## Setup
 
 To use this demo it is required to have the following software installed
 
@@ -46,12 +48,12 @@ This app was tested on a Windows 10 machine.
 
 To set up Hadoop on Windows 10 please follow [these](https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef) instructions.
 
-Clone this program and import it with an IDE your choice. (I use IntelliJ IDEA 2020.2)
+Clone this program and import it to an IDE your choice. (I use IntelliJ IDEA 2020.2)
 
 If your maven configuration does not import the dependencies please do so manually. 
 
-To verify a proper setup please execute the verify lifecycle in maven. 
-It should state `BUILD SUCCESS`
+To verify a proper setup please execute lifecycle `verify` in maven. 
+It should state: `BUILD SUCCESS`
 
 To finally execute this application execute the main function within the `AlgorithmicTradingApplication.class`
 
@@ -59,7 +61,7 @@ To finally execute this application execute the main function within the `Algori
 
 ### UI
 
-+ React (dependencies, internal app routing and basic layout)
++ React (setup, internal app routing and basic layout (not yet used for the demo))
 + MATLAB plot
 
 ### Maven dependencies
