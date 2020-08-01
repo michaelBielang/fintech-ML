@@ -194,9 +194,3 @@ To finally execute this application run the main function within the `Algorithmi
             <version>0.13</version>
         </dependency>
 ```
-
-## Contact
-
-Michael Bielang - `b137ang a-t codemerger d-o-t com`
-
-Prof. Dr. Christian Märtin `Christian d-o-t Maertin a-t hs-augsburg.de`
