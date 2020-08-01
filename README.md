@@ -20,7 +20,7 @@ This repository is part of my bachelor thesis "Execution and analysis of financi
  * [x] Utilities to run and compare strategies
  * [x] API support for MATLAB, Apache-Spark and DeepLearning4j
  
-## Todos
+## Todos for further versions
 
  - Further implementation of Apache Spark Neural Networks
  - Implement ML with MATLAB

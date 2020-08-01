@@ -6,9 +6,11 @@ import com.bachelorthesis.supervised_problem_solving.services.exchangeAPI.poloni
 import org.apache.commons.lang3.ArrayUtils;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeriesBuilder;
+import org.ta4j.core.indicators.CachedIndicator;
 import org.ta4j.core.indicators.MACDIndicator;
 import org.ta4j.core.indicators.RSIIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
+import org.ta4j.core.num.Num;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -53,14 +55,16 @@ public class Algorithms {
         initBars(chartDataVOList);
 
         RSIIndicator rsiIndicator = new RSIIndicator(new ClosePriceIndicator(series), bars);
-        return setupList(chartDataVOList, rsiIndicator);
+        return setupList(rsiIndicator);
     }
 
-    private static List<Double> setupList(List<ChartDataVO> chartDataVOList, RSIIndicator rsiIndicator) {
+    private static List<Double> setupList(CachedIndicator<Num> indicator) {
         final List<Double> indicatorResults = new ArrayList<>();
-        for (int i = 0; i < chartDataVOList.size(); i++) {
-            indicatorResults.add(rsiIndicator.getValue(i).doubleValue());
+
+        for (int i = 0; i < indicator.getBarSeries().getBarCount(); i++) {
+            indicatorResults.add(indicator.getValue(i).doubleValue());
         }
+
         return indicatorResults.subList(indicatorResults.size() - RuntimeDataStorage.getMatrixRowLength(), indicatorResults.size());
     }
 
@@ -73,12 +77,8 @@ public class Algorithms {
     public static List<Double> getMac(final List<ChartDataVO> chartDataVOList) {
         initBars(chartDataVOList);
 
-        MACDIndicator rsiIndicator = new MACDIndicator(new ClosePriceIndicator(series));
-        final List<Double> indicatorResults = new ArrayList<>();
-        for (int i = 0; i < chartDataVOList.size(); i++) {
-            indicatorResults.add(rsiIndicator.getValue(i).doubleValue());
-        }
-        return indicatorResults.subList(indicatorResults.size() - RuntimeDataStorage.getMatrixRowLength(), indicatorResults.size());
+        MACDIndicator macdIndicator = new MACDIndicator(new ClosePriceIndicator(series));
+        return setupList(macdIndicator);
     }
 
     private static void initBars(List<ChartDataVO> chartDataVOList) {

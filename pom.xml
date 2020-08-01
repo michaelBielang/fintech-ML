@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bachelorthesis</groupId>
-    <artifactId>supervised_problem_solving</artifactId>
+    <artifactId>algorithmic_trading_app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>supervised_problem_solving</name>
+    <name>algorithmic_trading_app</name>
     <description>Bachelor thesis about giving trading decisions</description>
 
     <properties>
