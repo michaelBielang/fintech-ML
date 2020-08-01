@@ -1,6 +1,6 @@
 # Introduction
 
-This repository is part of my bachelor thesis "Execution and analysis of finance transactions done by algorithms" under supervision of Prof. Dr. Christian Märtin, University of Applied Sciences Augsburg, Germany.
+This repository is part of my bachelor thesis "Execution and analysis of financial transactions done by algorithms" under supervision of Prof. Dr. Christian Märtin, University of Applied Sciences Augsburg, Germany.
 
 
 ## App 
@@ -9,32 +9,32 @@ This repository is part of my bachelor thesis "Execution and analysis of finance
 
 ## Features
 
- * [x] Fetching chart data from crypto exchange (www.poloniex.com)
+ * [x] Fetching chart data from a crypto exchange (www.poloniex.com)
  * [x] Make use of trading indicators  (Demo-mode uses MACD and RSI)
- * [x] Prepare and store data for in-app communication with Matlab
- * [x] Fully functional Matlab implementation for linear and stepwise regression analyse, prediction and backtesting
+ * [x] Preparing and storing data for in-app communication with MATLAB
+ * [x] Fully functional MATLAB implementation for linear and stepwise regression analysis, prediction and backtesting
  * [x] Building and maintaining data structures via liquibase
  * [x] Embedded & fast H2 DB
  * [x] Test Coverage
  * [x] Support of more than 130 technical indicators (Aroon, ATR, moving averages, parabolic SAR, RSI, etc.)
  * [x] Utilities to run and compare strategies
- * [x] API support of Matlab, Apache-Spark and DeepLearning4j
+ * [x] API support for MATLAB, Apache-Spark and DeepLearning4j
  
 ## Todos
 
  - Further implementation of Apache Spark Neural Networks
- - Implement ML with Matlab
- - Implement an UI (React support already present)
+ - Implement ML with MATLAB
+ - Implement a UI (React support already present)
  
 ## Setup
 
-To use this demo it is required to have the following software installed
+To use this demo it is required to have the following software installed:
 
   - Java 14+
   - Apache-Hadoop
-  - Matlab R2020a
+  - MATLAB R2020a
   
-Moreover, Matlab requires to have these plugins installed:
+Moreover, MATLAB requires to have these plugins installed:
 
   - Financial Instruments Toolbox
   - Trading Toolbox
@@ -52,7 +52,7 @@ Clone this repository and import it to an IDE of your choice. (I use IntelliJ ID
 
 If your maven configuration does not import dependencies automatically please do so manually. 
 
-To verify a proper setup please execute lifecycle `verify` in maven. 
+To verify a proper setup please execute maven's lifecycle `verify`. 
 It should state: `BUILD SUCCESS`
 
 To finally execute this application run the main function within the `AlgorithmicTradingApplication.class`
@@ -194,3 +194,9 @@ To finally execute this application run the main function within the `Algorithmi
             <version>0.13</version>
         </dependency>
 ```
+
+## Contact
+
+Michael Bielang - `b137ang a-t codemerger d-o-t com`
+
+Prof. Dr. Christian Märtin `Christian d-o-t Maertin a-t hs-augsburg.de`
